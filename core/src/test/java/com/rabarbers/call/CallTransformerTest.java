@@ -29,6 +29,30 @@ public class CallTransformerTest extends TestCase {
     }
 
     @Test
+    public void simpleConstructorFromClass() {
+        //copied from class
+        Call call = CallTransformer.convertToCallTrimmed("com.rabarbers.call.Alpha.Alpha");
+
+        assertEquals("com.rabarbers.call", call.getPackageX());
+        assertEquals("Alpha", call.getClassX());
+        assertEquals("Alpha", call.getMethodX());
+        assertEquals("()", call.getSignatureX());
+    }
+
+
+    @Test
+    public void simpleConstructorFromInvocation() {
+        //copied from class (for example, from Beta)
+        Call call = CallTransformer.convertToCallTrimmed("com.rabarbers.call.Alpha");
+
+        assertEquals("com.rabarbers.call", call.getPackageX());
+        assertEquals("Alpha", call.getClassX());
+        assertEquals("Alpha", call.getMethodX());
+        assertEquals("()", call.getSignatureX());
+    }
+
+
+    @Test
     public void simpleRightPadded() {
         Call call = CallTransformer.convertToCallTrimmed("com.rabarbers.verbalmodeler.sim.renderer.HeapRenderer#render    ");
 
@@ -86,8 +110,8 @@ public class CallTransformerTest extends TestCase {
 
         StringBuilder sb = new StringBuilder();
         sb.append("  com.rabarbers.verbalmodeler.sim.renderer.HeapRenderer#render").append("\n");
-        sb.append("    com.rabarbers.verbalmodeler.sim.Publisher.printPage(int, com.rabarbers.verbalmodeler.sim.story.Story)").append("\n");
-        sb.append("      com.rabarbers.verbalmodeler.sim.Publisher.publish").append("\n");
+        sb.append("    com.rabarbers.verbalmodeler.sim.Publisher#printPage(int, com.rabarbers.verbalmodeler.sim.story.Story)").append("\n");
+        sb.append("      com.rabarbers.verbalmodeler.sim.Publisher#publish").append("\n");
 
         InputStream is = new ByteArrayInputStream(sb.toString().getBytes(StandardCharsets.UTF_8));
         List<Call> result = CallTransformer.convertToList(is);
@@ -197,7 +221,7 @@ public class CallTransformerTest extends TestCase {
         StringBuilder sb = new StringBuilder();
         sb.append("").append("\n");
         sb.append("").append("\n");
-        sb.append("      com.rabarbers.verbalmodeler.sim.Publisher.publish").append("\n");
+        sb.append("      com.rabarbers.verbalmodeler.sim.Publisher#publish").append("\n");
 
         InputStream is = new ByteArrayInputStream(sb.toString().getBytes(StandardCharsets.UTF_8));
         List<Call> result = CallTransformer.convertToList(is);

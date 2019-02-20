@@ -22,38 +22,52 @@ public class CallTransformer {
     public static final String UNKNOWN = "...";
     public static final String UNKNOWN_EXCEL = "…";
     public static final String COMMENT_MARK = "//";
+    public static final String INTELLIJ_METHOD_SEPARATOR = "#";
 
     public static Call convertToCallTrimmed(String statement) {
         if (statement == null || statement.trim().length() == 0) {
             return null;
         } else {
-            statement = StringUtils.trim(statement); //! difference from convertToCallWithWhitespace
+            statement = statement.trim(); //! difference from convertToCallWithWhitespace
         }
 
         if (UNKNOWN.equals(statement.trim()) || UNKNOWN_EXCEL.equals(statement.trim()) || statement.trim().startsWith(COMMENT_MARK)) {
             return null;
         }
 
-        if (isIntellijStyle(statement)) {
-            //convert to Eclipse style reference
-            statement = statement.replaceAll("#", ".");
-        }
-
-        if (!statement.contains("(")) {
-            statement += "()";
-        }
-
-        statement = statement.trim();
+        statement = normalizeStatement(statement);
 
         String packageToMethod = statement.substring(0, statement.lastIndexOf("("));
 
-        String packageAndClass = packageToMethod.substring(0, packageToMethod.lastIndexOf("."));
+        String packageAndClass = packageToMethod.substring(0, packageToMethod.indexOf(INTELLIJ_METHOD_SEPARATOR));
         String method = packageToMethod.substring(packageAndClass.length() + 1);
         String signature = statement.substring(statement.indexOf("("));
 
         return new Call(packageAndClass.substring(0, packageAndClass.lastIndexOf(".")),
                 packageAndClass.substring(packageAndClass.lastIndexOf(".") + 1),
                 method, signature);
+    }
+
+    private static String normalizeStatement(String statement) {
+        if (statement.indexOf(INTELLIJ_METHOD_SEPARATOR) == -1) {
+            String[] parts = statement.split("\\.");
+            if (parts.length < 2) {
+                throw new RuntimeException("[" + statement + "]" + parts.length);
+            }
+            if (parts[parts.length - 1].equals(parts[parts.length - 2])) {
+                //com.rabarbers.call.Alpha.Alpha
+                statement = statement.substring(0, statement.lastIndexOf(".")) + INTELLIJ_METHOD_SEPARATOR + statement.substring(statement.lastIndexOf(".") + 1);
+            } else {
+                //com.rabarbers.call.Alpha
+                statement = statement + INTELLIJ_METHOD_SEPARATOR + parts[parts.length - 1];
+            }
+        }
+
+        if (!statement.contains("(")) {
+            statement += "()";
+        }
+
+        return statement;
     }
 
     public static boolean isIntellijStyle(String statement) {
