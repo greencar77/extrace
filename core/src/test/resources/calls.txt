@@ -1,0 +1,3 @@
+  com.rabarbers.verbalmodeler.sim.renderer.HeapRenderer#render
+    com.rabarbers.verbalmodeler.sim.Publisher.printPage(int, com.rabarbers.verbalmodeler.sim.story.Story)
+      com.rabarbers.verbalmodeler.sim.Publisher.publish
