@@ -40,22 +40,26 @@ public class Publisher {
     }
 
     public void publishDomainStatistics(Domain domain, String path) {
-        System.out.println("Classes: " + domain.getClasses().values().size());
+        StringBuilder sb = new StringBuilder();
+        sb.append("Classes: " + domain.getClasses().values().size()).append("\n");
         int methodCount = domain.getClasses().values().stream()
                 .map(c -> c.getMethods().size())
                 .mapToInt(Integer::intValue)
                 .sum();
-        System.out.println("Methods: " + methodCount);
+        sb.append("Methods: " + methodCount).append("\n");
+        writeFileWrapper(path, sb);
     }
 
     public void publishDomainStatistics(Domain domain, String path, AbstractCategoryByClass category) {
+        StringBuilder sb = new StringBuilder();
         Map<String, List<ClassX>> categorized = domain.getClasses().values().stream()
                 .collect(Collectors.groupingBy(category::getCategory, Collectors.toList()));
         categorized.keySet().stream()
                 .sorted()
                 .forEach(key -> {
-            System.out.println(key + ": " + categorized.get(key).size());
-        });
+                    sb.append(key + ": " + categorized.get(key).size()).append("\n");
+                });
+        writeFileWrapper(path, sb);
     }
 
     private void writeFileWrapper(String path, StringBuilder stringBuilder) {
