@@ -61,7 +61,7 @@ public class Publisher {
 
     protected void writeFileWrapper(String path, StringBuilder stringBuilder) {
         try {
-            File file = new File(path);
+            File file = new File(OUTPUT_FOLDER + path);
             System.out.println("Output file: " + file.getAbsolutePath());
             FileUtils.writeByteArrayToFile(file, stringBuilder.toString().getBytes(Charset.forName("UTF-8")));
         } catch (IOException e) {
@@ -83,7 +83,7 @@ public class Publisher {
     private void publish(ClassX classX) {
         StringBuilder sb = new StringBuilder();
         appendClassDetails(sb, classX);
-        writeFileWrapper(OUTPUT_FOLDER + "classes/" + toPath(classX.getPackageX()) + "/" + classX.getName() + ".txt", sb);
+        writeFileWrapper("classes/" + toPath(classX.getPackageX()) + "/" + classX.getName() + ".txt", sb);
     }
 
     private static final String toPath(String packageX) {
