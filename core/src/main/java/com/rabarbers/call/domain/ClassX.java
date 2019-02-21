@@ -1,12 +1,15 @@
 package com.rabarbers.call.domain;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class ClassX implements Comparable<ClassX> {
     private String packageX;
     private String name;
     private Map<String, MethodX> methods = new HashMap<>();
+    private Set<Trace> traces = new HashSet<>();
 
     public ClassX(Call call) {
         this(call.getPackageX(), call.getClassX());
@@ -36,5 +39,13 @@ public class ClassX implements Comparable<ClassX> {
     @Override
     public int compareTo(ClassX o) {
         return getFullName().compareTo(o.getFullName());
+    }
+
+    public Set<Trace> getTraces() {
+        return traces;
+    }
+
+    public void setTraces(Set<Trace> traces) {
+        this.traces = traces;
     }
 }

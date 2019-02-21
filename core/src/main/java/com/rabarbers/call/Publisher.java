@@ -2,6 +2,7 @@ package com.rabarbers.call;
 
 import com.rabarbers.call.domain.ClassX;
 import com.rabarbers.call.domain.Domain;
+import com.rabarbers.call.domain.MethodX;
 import com.rabarbers.call.filter.Filter;
 import org.apache.commons.io.FileUtils;
 
@@ -43,10 +44,10 @@ public class Publisher {
                 .filter(filter::match)
                 .forEach(
                         c -> {
-                            sb.append(c.getFullName()).append("\n");
+                            sb.append(c.getFullName()).append(" (" + c.getTraces().size() + ")").append("\n");
                             c.getMethods().values().stream()
                                     .sorted()
-                                    .forEach(m -> sb.append("    " + m.getMethodLocalId()).append("\n"));
+                                    .forEach(m -> sb.append("    " + m.getMethodLocalId()).append(" (" + m.getTraces().size() + ")").append("\n"));
                         }
                 );
         writeFileWrapper(path, sb);
@@ -57,6 +58,21 @@ public class Publisher {
         classX.getMethods().values().stream()
                 .sorted()
                 .forEach(m -> sb.append("    " + m.getMethodLocalId()).append("\n"));
+
+        sb.append("\n");
+        sb.append("------------------------\n");
+
+        classX.getMethods().values().stream()
+                .sorted()
+                .forEach(m -> methodDetails(sb, m));
+    }
+
+    protected void methodDetails(StringBuilder sb, MethodX method) {
+        sb.append("\n");
+        sb.append(method.getMethodLocalId()).append("\n");
+        method.getTraces().stream()
+                .sorted()
+                .forEach(t -> sb.append("    " + t.getName()).append("\n"));
     }
 
     protected void writeFileWrapper(String path, StringBuilder stringBuilder) {

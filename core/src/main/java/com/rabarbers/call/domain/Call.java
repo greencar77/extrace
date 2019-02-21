@@ -62,6 +62,10 @@ public class Call {
         return methodX + signatureX;
     }
 
+    public String getMethodGlobalId() {
+        return packageX + "." + classX + methodX + signatureX;
+    }
+
     public String shortVersion() {
         return methodX + " " + "(" + classX + ")";
     }

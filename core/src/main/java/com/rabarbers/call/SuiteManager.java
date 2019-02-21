@@ -32,12 +32,14 @@ public class SuiteManager {
 
     public void extractDomain(Suite suite) {
         Map<String, ClassX> classes = suite.getDomain().getClasses();
+        Map<String, MethodX> methods = suite.getDomain().getMethods();
 
         suite.getTraces()
                 .forEach(trace -> {
                     trace.getCalls().stream()
                             .filter(c -> c != null)
                             .forEach(call -> {
+                                //class global
                                 ClassX classX;
                                 if (!classes.containsKey(call.getClassFullName())) {
                                     classX = new ClassX(call);
@@ -45,13 +47,34 @@ public class SuiteManager {
                                 } else {
                                     classX = classes.get(call.getClassFullName());
                                 }
+                                bind(trace, classX);
 
+                                //method global
+                                MethodX methodX;
+                                if (!methods.containsKey(call.getMethodGlobalId())) {
+                                    methodX = new MethodX(call);
+                                    methods.put(call.getMethodGlobalId(), methodX);
+                                } else {
+                                    methodX = methods.get(call.getMethodGlobalId());
+                                }
+                                bind(trace, methodX);
+
+                                //method local
                                 if (!classX.getMethods().containsKey(call.getMethodLocalId())) {
-                                    MethodX methodX = new MethodX(call);
                                     classX.getMethods().put(methodX.getMethodLocalId(), methodX);
                                 }
                             });
                 });
 
+    }
+
+    private void bind(Trace trace, ClassX classX) {
+        trace.getClasses().add(classX);
+        classX.getTraces().add(trace);
+    }
+
+    private void bind(Trace trace, MethodX methodX) {
+        trace.getMethods().add(methodX);
+        methodX.getTraces().add(trace);
     }
 }

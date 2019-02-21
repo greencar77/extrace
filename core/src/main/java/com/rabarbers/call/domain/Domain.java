@@ -5,8 +5,13 @@ import java.util.Map;
 
 public class Domain {
     private Map<String, ClassX> classes = new HashMap<>();
+    private Map<String, MethodX> methods = new HashMap<>();
 
     public Map<String, ClassX> getClasses() {
         return classes;
+    }
+
+    public Map<String, MethodX> getMethods() {
+        return methods;
     }
 }
