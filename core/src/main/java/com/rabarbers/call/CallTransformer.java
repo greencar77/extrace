@@ -114,15 +114,19 @@ public class CallTransformer {
         }
     }
 
-    public static File convertToFile(File file, String path, Map<String, String> aliases) {
+    public static File convertToFile(String sourcePath, String destinationPath, Map<String, String> aliases) {
+        return convertToFile(new File(sourcePath), destinationPath, aliases);
+    }
+
+    public static File convertToFile(File sourceFile, String destinationPath, Map<String, String> aliases) {
         StringBuilder sb = new StringBuilder();
-        convertToList(file, aliases).stream()
+        convertToList(sourceFile, aliases).stream()
                 .filter(call -> call != null)
                 .forEach(call -> {
                     sb.append(call.getIndent() + call.shortVersion()).append("\r\n");
                 });
 
-        File result = new File(path);
+        File result = new File(destinationPath);
         try {
             FileUtils.writeByteArrayToFile(result, sb.toString().getBytes(Charset.forName("UTF8")));
         } catch (IOException e) {

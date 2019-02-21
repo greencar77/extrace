@@ -18,6 +18,10 @@ public class SuiteManager {
         suite.getTraces().add(new Trace(file.getName(), calls));
     }
 
+    public void appendTraceFromFolder(Suite suite, String folderPath) {
+        appendTraceFromFolder(suite, new File(folderPath));
+    }
+
     public void appendTraceFromFolder(Suite suite, File file) {
         Arrays.stream(file.listFiles())
                 .filter(f -> !f.isDirectory())
