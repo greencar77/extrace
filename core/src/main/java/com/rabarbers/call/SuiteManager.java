@@ -14,7 +14,7 @@ import java.util.Map;
 public class SuiteManager {
     public void appendTrace(Suite suite, File file) {
         System.out.println("Append trace: " + file.getAbsoluteFile());
-        List<Call> calls = CallTransformer.convertToList(file);
+        List<Call> calls = CallTransformer.convertToList(file, suite.getAliases());
         suite.getTraces().add(new Trace(file.getName(), calls));
     }
 

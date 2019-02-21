@@ -13,14 +13,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RunWith(JUnit4.class)
 public class CallTransformerTest extends TestCase {
 
     @Test
-    public void simple() {
-        Call call = CallTransformer.convertToCallTrimmed("com.rabarbers.verbalmodeler.sim.renderer.HeapRenderer#render");
+    public void convertToCallTrimmed_simple() {
+        Call call = CallTransformer.convertToCallTrimmed("com.rabarbers.verbalmodeler.sim.renderer.HeapRenderer#render", null);
 
         assertEquals("com.rabarbers.verbalmodeler.sim.renderer", call.getPackageX());
         assertEquals("HeapRenderer", call.getClassX());
@@ -29,9 +31,18 @@ public class CallTransformerTest extends TestCase {
     }
 
     @Test
-    public void simpleConstructorFromClass() {
+    public void convertToCallTrimmed_alias() {
+        Map<String, String> aliases = new HashMap<>();
+        aliases.put("stream", "...");
+        Call call = CallTransformer.convertToCallTrimmed("stream", aliases);
+
+        assertNull(call);
+    }
+
+    @Test
+    public void convertToCallTrimmed_simpleConstructorFromClass() {
         //copied from class
-        Call call = CallTransformer.convertToCallTrimmed("com.rabarbers.call.Alpha.Alpha");
+        Call call = CallTransformer.convertToCallTrimmed("com.rabarbers.call.Alpha.Alpha", null);
 
         assertEquals("com.rabarbers.call", call.getPackageX());
         assertEquals("Alpha", call.getClassX());
@@ -41,9 +52,9 @@ public class CallTransformerTest extends TestCase {
 
 
     @Test
-    public void simpleConstructorFromInvocation() {
+    public void convertToCallTrimmed_simpleConstructorFromInvocation() {
         //copied from class (for example, from Beta)
-        Call call = CallTransformer.convertToCallTrimmed("com.rabarbers.call.Alpha");
+        Call call = CallTransformer.convertToCallTrimmed("com.rabarbers.call.Alpha", null);
 
         assertEquals("com.rabarbers.call", call.getPackageX());
         assertEquals("Alpha", call.getClassX());
@@ -53,8 +64,8 @@ public class CallTransformerTest extends TestCase {
 
 
     @Test
-    public void simpleRightPadded() {
-        Call call = CallTransformer.convertToCallTrimmed("com.rabarbers.verbalmodeler.sim.renderer.HeapRenderer#render    ");
+    public void convertToCallTrimmed_simpleRightPadded() {
+        Call call = CallTransformer.convertToCallTrimmed("com.rabarbers.verbalmodeler.sim.renderer.HeapRenderer#render    ", null);
 
         assertEquals("com.rabarbers.verbalmodeler.sim.renderer", call.getPackageX());
         assertEquals("HeapRenderer", call.getClassX());
@@ -63,8 +74,8 @@ public class CallTransformerTest extends TestCase {
     }
 
     @Test
-    public void indent() {
-        Call call = CallTransformer.convertToCallWithWhitespace("    com.rabarbers.verbalmodeler.sim.renderer.HeapRenderer#render");
+    public void convertToCallWithWhitespace_indent() {
+        Call call = CallTransformer.convertToCallWithWhitespace("    com.rabarbers.verbalmodeler.sim.renderer.HeapRenderer#render", null);
 
         assertEquals("    ", call.getIndent());
         assertEquals("com.rabarbers.verbalmodeler.sim.renderer", call.getPackageX());
@@ -74,14 +85,14 @@ public class CallTransformerTest extends TestCase {
     }
 
     @Test
-    public void indentOnlyWhitespace() {
-        Call call = CallTransformer.convertToCallWithWhitespace("    ");
+    public void convertToCallWithWhitespace_indentOnlyWhitespace() {
+        Call call = CallTransformer.convertToCallWithWhitespace("    ", null);
         assertNull(call);
     }
 
     @Test
-    public void indentTabs() {
-        Call call = CallTransformer.convertToCallWithWhitespace("\tcom.rabarbers.verbalmodeler.sim.renderer.HeapRenderer#render");
+    public void convertToCallWithWhitespace_indentTabs() {
+        Call call = CallTransformer.convertToCallWithWhitespace("\tcom.rabarbers.verbalmodeler.sim.renderer.HeapRenderer#render", null);
 
         assertEquals("\t", call.getIndent());
         assertEquals("com.rabarbers.verbalmodeler.sim.renderer", call.getPackageX());
@@ -91,8 +102,8 @@ public class CallTransformerTest extends TestCase {
     }
 
     @Test
-    public void indentMixedTabsWithSpaces() {
-        Call call = CallTransformer.convertToCallWithWhitespace("\t\t   com.rabarbers.verbalmodeler.sim.renderer.HeapRenderer#render");
+    public void convertToCallWithWhitespace_indentMixedTabsWithSpaces() {
+        Call call = CallTransformer.convertToCallWithWhitespace("\t\t   com.rabarbers.verbalmodeler.sim.renderer.HeapRenderer#render", null);
 
         assertEquals("\t\t   ", call.getIndent());
         assertEquals("com.rabarbers.verbalmodeler.sim.renderer", call.getPackageX());
@@ -102,7 +113,7 @@ public class CallTransformerTest extends TestCase {
     }
 
     @Test
-    public void convertToListStream() {
+    public void convertToList_convertToListStream() {
         List<Call> expected = new ArrayList<>();
         expected.add(new Call("  ", "com.rabarbers.verbalmodeler.sim.renderer", "HeapRenderer", "render", "()"));
         expected.add(new Call("    ", "com.rabarbers.verbalmodeler.sim", "Publisher", "printPage", "(int, com.rabarbers.verbalmodeler.sim.story.Story)"));
@@ -114,13 +125,13 @@ public class CallTransformerTest extends TestCase {
         sb.append("      com.rabarbers.verbalmodeler.sim.Publisher#publish").append("\n");
 
         InputStream is = new ByteArrayInputStream(sb.toString().getBytes(StandardCharsets.UTF_8));
-        List<Call> result = CallTransformer.convertToList(is);
+        List<Call> result = CallTransformer.convertToList(is, null);
 
         assertEquals(expected, result);
     }
 
     @Test
-    public void convertToListFile() {
+    public void convertToList_convertToListFile() {
         List<Call> expected = new ArrayList<>();
         expected.add(new Call("  ", "com.rabarbers.verbalmodeler.sim.renderer", "HeapRenderer", "render", "()"));
         expected.add(new Call("    ", "com.rabarbers.verbalmodeler.sim", "Publisher", "printPage", "(int, com.rabarbers.verbalmodeler.sim.story.Story)"));
@@ -128,16 +139,16 @@ public class CallTransformerTest extends TestCase {
 
         File file = new File("src/test/resources/calls.txt");
 
-        List<Call> result = CallTransformer.convertToList(file);
+        List<Call> result = CallTransformer.convertToList(file, null);
 
         assertEquals(expected, result);
     }
 
     @Test
-    public void fileToFile() {
+    public void convertToFile_fileToFile() {
         File file = new File("src/test/resources/calls.txt");
 
-        File result = CallTransformer.convertToFile(file, "target/calls_converted.txt");
+        File result = CallTransformer.convertToFile(file, "target/calls_converted.txt", null);
 
         String expected;
         String actual;
@@ -152,10 +163,10 @@ public class CallTransformerTest extends TestCase {
     }
 
     @Test
-    public void fileToFileWithEmpty() {
+    public void convertToFile_fileToFileWithEmpty() {
         File file = new File("src/test/resources/calls_empty.txt");
 
-        File result = CallTransformer.convertToFile(file, "target/calls_empty_converted.txt");
+        File result = CallTransformer.convertToFile(file, "target/calls_empty_converted.txt", null);
 
         String expected;
         String actual;
@@ -170,49 +181,49 @@ public class CallTransformerTest extends TestCase {
     }
 
     @Test
-    public void emptyLine() {
-        Call call = CallTransformer.convertToCallTrimmed("");
+    public void convertToCallTrimmed_emptyLine() {
+        Call call = CallTransformer.convertToCallTrimmed("", null);
         assertNull(call);
     }
 
     @Test
-    public void unknown() {
-        Call call = CallTransformer.convertToCallTrimmed("...");
+    public void convertToCallTrimmed_unknown() {
+        Call call = CallTransformer.convertToCallTrimmed("...", null);
         assertNull(call);
     }
 
     @Test
-    public void unknownPadded() {
-        Call call = CallTransformer.convertToCallTrimmed("  ...  ");
+    public void convertToCallTrimmed_unknownPadded() {
+        Call call = CallTransformer.convertToCallTrimmed("  ...  ", null);
         assertNull(call);
     }
 
     @Test
-    public void unknownPaddedTabs() {
-        Call call = CallTransformer.convertToCallWithWhitespace("\t...\t\t\t\t");
+    public void convertToCallWithWhitespace_convertToCallWithWhitespace_unknownPaddedTabs() {
+        Call call = CallTransformer.convertToCallWithWhitespace("\t...\t\t\t\t", null);
         assertNull(call);
     }
 
     @Test
-    public void unknownPaddedTabsStart() {
-        Call call = CallTransformer.convertToCallWithWhitespace("\t...");
+    public void convertToCallWithWhitespace_unknownPaddedTabsStart() {
+        Call call = CallTransformer.convertToCallWithWhitespace("\t...", null);
         assertNull(call);
     }
 
     @Test
-    public void commentMark() {
-        Call call = CallTransformer.convertToCallTrimmed("    //aa");
+    public void convertToCallTrimmed_commentMark() {
+        Call call = CallTransformer.convertToCallTrimmed("    //aa", null);
         assertNull(call);
     }
 
     @Test
-    public void emptyLinetabs() {
-        Call call = CallTransformer.convertToCallTrimmed("\t\t\t"); //From Excel
+    public void convertToCallTrimmed_emptyLinetabs() {
+        Call call = CallTransformer.convertToCallTrimmed("\t\t\t", null); //From Excel
         assertNull(call);
     }
 
     @Test
-    public void convertToListWithBlanks() {
+    public void convertToList_withBlanks() {
         List<Call> expected = new ArrayList<>();
         expected.add(null);
         expected.add(null);
@@ -224,7 +235,7 @@ public class CallTransformerTest extends TestCase {
         sb.append("      com.rabarbers.verbalmodeler.sim.Publisher#publish").append("\n");
 
         InputStream is = new ByteArrayInputStream(sb.toString().getBytes(StandardCharsets.UTF_8));
-        List<Call> result = CallTransformer.convertToList(is);
+        List<Call> result = CallTransformer.convertToList(is, null);
 
         assertEquals(expected, result);
     }

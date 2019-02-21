@@ -14,6 +14,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,18 +25,22 @@ public class CallTransformer {
     public static final String COMMENT_MARK = "//";
     public static final String INTELLIJ_METHOD_SEPARATOR = "#";
 
-    public static Call convertToCallTrimmed(String statement) {
+    public static Call convertToCallTrimmed(String statement, Map<String, String> aliases) {
         if (statement == null || statement.trim().length() == 0) {
             return null;
         } else {
             statement = statement.trim(); //! difference from convertToCallWithWhitespace
         }
 
+        if (aliases != null && aliases.keySet().contains(statement)) {
+            statement = aliases.get(statement);
+        }
+
         if (UNKNOWN.equals(statement.trim()) || UNKNOWN_EXCEL.equals(statement.trim()) || statement.trim().startsWith(COMMENT_MARK)) {
             return null;
         }
 
-        statement = normalizeStatement(statement);
+        statement = normalizeStatement(statement, aliases);
 
         String packageToMethod = statement.substring(0, statement.lastIndexOf("("));
 
@@ -48,7 +53,8 @@ public class CallTransformer {
                 method, signature);
     }
 
-    private static String normalizeStatement(String statement) {
+    private static String normalizeStatement(String statement, Map<String, String> aliases) {
+
         if (statement.indexOf(INTELLIJ_METHOD_SEPARATOR) == -1) {
             String[] parts = statement.split("\\.");
             if (parts.length < 2) {
@@ -74,7 +80,7 @@ public class CallTransformer {
         return statement.contains("#");
     }
 
-    public static Call convertToCallWithWhitespace(String statement) {
+    public static Call convertToCallWithWhitespace(String statement, Map<String, String> aliases) {
         if (statement == null || statement.trim().length() == 0) {
             return null;
         } else {
@@ -93,24 +99,24 @@ public class CallTransformer {
             }
         }
 
-        Call result = convertToCallTrimmed(statement.trim());
-        if (indent != null) {
+        Call result = convertToCallTrimmed(statement.trim(), aliases);
+        if (result != null && indent != null) {
             result.setIndent(indent);
         }
         return result;
     }
 
-    public static List<Call> convertToList(File file) {
+    public static List<Call> convertToList(File file, Map<String, String> aliases) {
         try {
-            return convertToList(new FileInputStream(file));
+            return convertToList(new FileInputStream(file), aliases);
         } catch (FileNotFoundException e) {
             throw new RuntimeException(file.getAbsolutePath(), e);
         }
     }
 
-    public static File convertToFile(File file, String path) {
+    public static File convertToFile(File file, String path, Map<String, String> aliases) {
         StringBuilder sb = new StringBuilder();
-        convertToList(file).stream()
+        convertToList(file, aliases).stream()
                 .filter(call -> call != null)
                 .forEach(call -> {
                     sb.append(call.getIndent() + call.shortVersion()).append("\r\n");
@@ -123,21 +129,14 @@ public class CallTransformer {
             throw new RuntimeException(e);
         }
         return result;
-//        try (FileOutputStream fos = new FileOutputStream(path)) {
-//            fos.write(sb.toString().getBytes());
-//        } catch (FileNotFoundException e) {
-//            throw new RuntimeException(e);
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
     }
 
-    public static List<Call> convertToList(InputStream is) {
+    public static List<Call> convertToList(InputStream is, Map<String, String> aliases) {
         List<Call> result = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
             String line;
             while ((line = br.readLine()) != null) {
-                result.add(convertToCallWithWhitespace(line));
+                result.add(convertToCallWithWhitespace(line, aliases));
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
