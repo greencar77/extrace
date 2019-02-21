@@ -57,7 +57,13 @@ public class Publisher {
         categorized.keySet().stream()
                 .sorted()
                 .forEach(key -> {
-                    sb.append(key + ": " + categorized.get(key).size()).append("\n");
+                    sb.append(key + ": " + categorized.get(key).size());
+
+                    int methodCount = categorized.get(key).stream().map(c -> c.getMethods().size())
+                            .mapToInt(Integer::intValue)
+                            .sum();
+                    sb.append("/" + methodCount);
+                    sb.append("\n");
                 });
         writeFileWrapper(path, sb);
     }
