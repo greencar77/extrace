@@ -1,4 +1,4 @@
-package com.rabarbers.call;
+package com.rabarbers.call.publish;
 
 import com.rabarbers.call.domain.ClassX;
 import com.rabarbers.call.domain.Domain;
@@ -10,9 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 
-public class Publisher {
-    public static final String DATA_FOLDER = "data/";
-    public static final String OUTPUT_FOLDER = DATA_FOLDER + "output/";
+public class DomainPublisher extends Publisher {
 
     public void publishDomainClasses(Domain domain, String path) {
         StringBuilder sb = new StringBuilder();
@@ -75,16 +73,6 @@ public class Publisher {
                 .forEach(t -> sb.append("    " + t.getName()).append("\n"));
     }
 
-    protected void writeFileWrapper(String path, StringBuilder stringBuilder) {
-        try {
-            File file = new File(OUTPUT_FOLDER + path);
-            System.out.println("Output file: " + file.getAbsolutePath());
-            FileUtils.writeByteArrayToFile(file, stringBuilder.toString().getBytes(Charset.forName("UTF-8")));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public void publishDomainClassDetails(Domain domain, Filter filter) {
         if (filter == null) {
             domain.getClasses().values().stream()
@@ -100,9 +88,5 @@ public class Publisher {
         StringBuilder sb = new StringBuilder();
         appendClassDetails(sb, classX);
         writeFileWrapper("classes/" + toPath(classX.getPackageX()) + "/" + classX.getName() + ".txt", sb);
-    }
-
-    private static final String toPath(String packageX) {
-        return packageX.replaceAll("\\.", "/");
     }
 }

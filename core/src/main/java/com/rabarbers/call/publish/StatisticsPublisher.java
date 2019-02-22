@@ -1,4 +1,4 @@
-package com.rabarbers.call;
+package com.rabarbers.call.publish;
 
 import com.rabarbers.call.domain.ClassX;
 import com.rabarbers.call.domain.Domain;
