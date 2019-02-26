@@ -3,12 +3,15 @@ package com.rabarbers.call.publish;
 import com.rabarbers.call.domain.ClassX;
 import com.rabarbers.call.domain.Domain;
 import com.rabarbers.call.domain.MethodX;
+import com.rabarbers.call.domain.Trace;
 import com.rabarbers.call.filter.Filter;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class DomainPublisher extends Publisher {
 
@@ -52,13 +55,24 @@ public class DomainPublisher extends Publisher {
     }
 
     protected void appendClassDetails(StringBuilder sb, ClassX classX) {
+        sb.append("=================== Class details ===================").append("\n");
         sb.append(classX.getFullName()).append("\n");
         classX.getMethods().values().stream()
                 .sorted()
                 .forEach(m -> sb.append("    " + m.getMethodLocalId()).append("\n"));
 
         sb.append("\n");
-        sb.append("------------------------\n");
+        Set<Trace> classTraces = classX.getMethods().values().stream()
+                .flatMap(m -> m.getTraces().stream())
+                .collect(Collectors.toSet());
+
+        sb.append("Traces:").append("\n");
+        classTraces.stream()
+                .sorted()
+                .forEach(t -> sb.append("    " + t.getName()).append("\n"));
+
+        sb.append("\n");
+        sb.append("=================== Method details ===================").append("\n");
 
         classX.getMethods().values().stream()
                 .sorted()
