@@ -13,7 +13,7 @@ import java.nio.charset.Charset;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class DomainPublisher extends Publisher {
+public class TxtDomainPublisher extends Publisher {
 
     public void publishDomainClasses(Domain domain, String path) {
         StringBuilder sb = new StringBuilder();
