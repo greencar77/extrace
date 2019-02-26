@@ -13,6 +13,8 @@ import java.util.stream.Collectors;
 
 public class HtmlDomainPublisher extends Publisher {
 
+    public static final String BR = "<br/>\n";
+
     public void publishDomainClasses(Domain domain, String path) {
         HtmlPage root = new HtmlPage("Classes");
 
@@ -20,7 +22,7 @@ public class HtmlDomainPublisher extends Publisher {
         domain.getClasses().values().stream()
                 .sorted()
                 .forEach(c -> {
-                    sb.append("<a href=\"classes\\" + toPath(c.getPackageX()) + "/" + c.getName() + ".txt" + "\">" + c.getFullName() + "</a>").append("<br/>").append("\n");
+                    sb.append("<a href=\"classes\\" + toPath(c.getPackageX()) + "/" + c.getName() + ".html" + "\">" + c.getFullName() + "</a>").append("<br/>").append("\n");
                 });
 
         root.getBody().appendChildContent(sb);
@@ -39,30 +41,38 @@ public class HtmlDomainPublisher extends Publisher {
     }
 
     private void publish(ClassX classX) {
+        HtmlPage root = new HtmlPage(classX.getName());
+
         StringBuilder sb = new StringBuilder();
         appendClassDetails(sb, classX);
-        writeFileWrapper("html/classes/" + toPath(classX.getPackageX()) + "/" + classX.getName() + ".txt", sb);
+
+        root.getBody().appendChildContent(sb);
+        writeFileWrapper("html/classes/" + toPath(classX.getPackageX()) + "/" + classX.getName() + ".html", root);
     }
 
     protected void appendClassDetails(StringBuilder sb, ClassX classX) {
-        sb.append("=================== Class details ===================").append("\n");
-        sb.append(classX.getFullName()).append("\n");
+        sb.append("=================== Class details ===================").append(BR);
+        sb.append(classX.getFullName());
+        sb.append("<ul>");
         classX.getMethods().values().stream()
                 .sorted()
-                .forEach(m -> sb.append("    " + m.getMethodLocalId()).append("\n"));
+                .forEach(m -> sb.append("<li>").append(m.getMethodLocalId()).append("</li>"));
+        sb.append("</ul>");
 
-        sb.append("\n");
+        sb.append(BR);
         Set<Trace> classTraces = classX.getMethods().values().stream()
                 .flatMap(m -> m.getTraces().stream())
                 .collect(Collectors.toSet());
 
-        sb.append("Traces:").append("\n");
+        sb.append("Traces:");
+        sb.append("<ul>");
         classTraces.stream()
                 .sorted()
-                .forEach(t -> sb.append("    " + t.getName()).append("\n"));
+                .forEach(t -> sb.append("<li>").append(t.getName()).append("</li>"));
+        sb.append("</ul>");
 
-        sb.append("\n");
-        sb.append("=================== Method details ===================").append("\n");
+        sb.append(BR);
+        sb.append("=================== Method details ===================").append(BR);
 
         classX.getMethods().values().stream()
                 .sorted()
@@ -70,10 +80,12 @@ public class HtmlDomainPublisher extends Publisher {
     }
 
     protected void methodDetails(StringBuilder sb, MethodX method) {
-        sb.append("\n");
-        sb.append(method.getMethodLocalId()).append("\n");
+        sb.append(BR);
+        sb.append(method.getMethodLocalId());
+        sb.append("<ul>");
         method.getTraces().stream()
                 .sorted()
-                .forEach(t -> sb.append("    " + t.getName()).append("\n"));
+                .forEach(t -> sb.append("<li>").append(t.getName()).append("</li>"));
+        sb.append("</ul>");
     }
 }
