@@ -4,6 +4,7 @@ import com.rabarbers.call.domain.ClassX;
 import com.rabarbers.call.domain.Domain;
 import com.rabarbers.call.domain.MethodX;
 import com.rabarbers.call.filter.Filter;
+import com.rabarbers.call.html.Node;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -19,6 +20,16 @@ public class Publisher {
             File file = new File(OUTPUT_FOLDER + path);
             System.out.println("Output file: " + file.getAbsolutePath());
             FileUtils.writeByteArrayToFile(file, stringBuilder.toString().getBytes(Charset.forName("UTF-8")));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    protected void writeFileWrapper(String path, Node node) {
+        try {
+            File file = new File(OUTPUT_FOLDER + path);
+            System.out.println("Output file: " + file.getAbsolutePath());
+            FileUtils.writeByteArrayToFile(file, node.getContent().toString().getBytes(Charset.forName("UTF-8")));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -5,6 +5,8 @@ import com.rabarbers.call.domain.Domain;
 import com.rabarbers.call.domain.MethodX;
 import com.rabarbers.call.domain.Trace;
 import com.rabarbers.call.filter.Filter;
+import com.rabarbers.call.html.Html;
+import com.rabarbers.call.html.HtmlPage;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -12,13 +14,17 @@ import java.util.stream.Collectors;
 public class HtmlDomainPublisher extends Publisher {
 
     public void publishDomainClasses(Domain domain, String path) {
+        HtmlPage root = new HtmlPage("Classes");
+
         StringBuilder sb = new StringBuilder();
         domain.getClasses().values().stream()
                 .sorted()
                 .forEach(c -> {
                     sb.append("<a href=\"classes\\" + toPath(c.getPackageX()) + "/" + c.getName() + ".txt" + "\">" + c.getFullName() + "</a>").append("<br/>").append("\n");
                 });
-        writeFileWrapper(path, sb);
+
+        root.getBody().appendChildContent(sb);
+        writeFileWrapper(path, root);
     }
 
     public void publishDomainClassDetails(Domain domain, Filter filter) {
