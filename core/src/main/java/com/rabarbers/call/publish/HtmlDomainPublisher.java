@@ -4,8 +4,7 @@ import com.rabarbers.call.domain.ClassX;
 import com.rabarbers.call.domain.Domain;
 import com.rabarbers.call.domain.MethodX;
 import com.rabarbers.call.domain.Trace;
-import com.rabarbers.call.filter.Filter;
-import com.rabarbers.call.html.Html;
+import com.rabarbers.call.filter.ClassFilter;
 import com.rabarbers.call.html.HtmlPage;
 
 import java.util.Set;
@@ -15,27 +14,36 @@ public class HtmlDomainPublisher extends Publisher {
 
     public static final String BR = "<br/>\n";
 
-    public void publishDomainClasses(Domain domain, String path) {
+    public void publishDomainClasses(Domain domain, String path, ClassFilter classFilter) {
         HtmlPage root = new HtmlPage("Classes");
 
         StringBuilder sb = new StringBuilder();
-        domain.getClasses().values().stream()
-                .sorted()
-                .forEach(c -> {
-                    sb.append("<a href=\"classes\\" + toPath(c.getPackageX()) + "/" + c.getName() + ".html" + "\">" + c.getFullName() + "</a>").append("<br/>").append("\n");
-                });
+        if (classFilter == null) {
+            domain.getClasses().values().stream()
+                    .sorted()
+                    .forEach(c -> {
+                        sb.append("<a href=\"classes\\" + toPath(c.getPackageX()) + "/" + c.getName() + ".html" + "\">" + c.getFullName() + "</a>").append("<br/>").append("\n");
+                    });
+        } else {
+            domain.getClasses().values().stream()
+                    .sorted()
+                    .filter(classFilter::match)
+                    .forEach(c -> {
+                        sb.append("<a href=\"classes\\" + toPath(c.getPackageX()) + "/" + c.getName() + ".html" + "\">" + c.getFullName() + "</a>").append("<br/>").append("\n");
+                    });
+        }
 
         root.getBody().appendChildContent(sb);
         writeFileWrapper(path, root);
     }
 
-    public void publishDomainClassDetails(Domain domain, Filter filter) {
-        if (filter == null) {
+    public void publishDomainClassDetails(Domain domain, ClassFilter classFilter) {
+        if (classFilter == null) {
             domain.getClasses().values().stream()
                     .forEach(c -> publish(c));
         } else {
             domain.getClasses().values().stream()
-                    .filter(filter::match)
+                    .filter(classFilter::match)
                     .forEach(c -> publish(c));
         }
     }

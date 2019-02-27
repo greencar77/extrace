@@ -1,9 +1,5 @@
 package com.rabarbers.call.publish;
 
-import com.rabarbers.call.domain.ClassX;
-import com.rabarbers.call.domain.Domain;
-import com.rabarbers.call.domain.MethodX;
-import com.rabarbers.call.filter.Filter;
 import com.rabarbers.call.html.Node;
 import org.apache.commons.io.FileUtils;
 

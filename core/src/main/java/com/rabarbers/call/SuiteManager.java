@@ -31,8 +31,8 @@ public class SuiteManager {
     }
 
     public void extractDomain(Suite suite) {
-        Map<String, ClassX> classes = suite.getDomain().getClasses();
-        Map<String, MethodX> methods = suite.getDomain().getMethods();
+        Map<String, ClassX> domainClasses = suite.getDomain().getClasses();
+        Map<String, MethodX> domainMethods = suite.getDomain().getMethods();
 
         suite.getTraces()
                 .forEach(trace -> {
@@ -41,21 +41,21 @@ public class SuiteManager {
                             .forEach(call -> {
                                 //class global
                                 ClassX classX;
-                                if (!classes.containsKey(call.getClassFullName())) {
+                                if (!domainClasses.containsKey(call.getClassFullName())) {
                                     classX = new ClassX(call);
-                                    classes.put(classX.getFullName(), classX);
+                                    domainClasses.put(classX.getFullName(), classX);
                                 } else {
-                                    classX = classes.get(call.getClassFullName());
+                                    classX = domainClasses.get(call.getClassFullName());
                                 }
                                 bind(trace, classX);
 
                                 //method global
                                 MethodX methodX;
-                                if (!methods.containsKey(call.getMethodGlobalId())) {
+                                if (!domainMethods.containsKey(call.getMethodGlobalId())) {
                                     methodX = new MethodX(call);
-                                    methods.put(call.getMethodGlobalId(), methodX);
+                                    domainMethods.put(call.getMethodGlobalId(), methodX);
                                 } else {
-                                    methodX = methods.get(call.getMethodGlobalId());
+                                    methodX = domainMethods.get(call.getMethodGlobalId());
                                 }
                                 bind(trace, methodX);
 

@@ -2,10 +2,10 @@ package com.rabarbers.call.filter;
 
 import com.rabarbers.call.domain.ClassX;
 
-public class StartsWithFilter extends Filter {
+public class StartsWithClassFilter extends ClassFilter {
     private String start;
 
-    public StartsWithFilter(String start) {
+    public StartsWithClassFilter(String start) {
         this.start = start;
     }
 

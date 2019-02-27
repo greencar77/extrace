@@ -4,12 +4,8 @@ import com.rabarbers.call.domain.ClassX;
 import com.rabarbers.call.domain.Domain;
 import com.rabarbers.call.domain.MethodX;
 import com.rabarbers.call.domain.Trace;
-import com.rabarbers.call.filter.Filter;
-import org.apache.commons.io.FileUtils;
+import com.rabarbers.call.filter.ClassFilter;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -38,11 +34,11 @@ public class TxtDomainPublisher extends Publisher {
         writeFileWrapper(path, sb);
     }
 
-    public void publishDomainClassesWithMethods(Domain domain, String path, Filter filter) {
+    public void publishDomainClassesWithMethods(Domain domain, String path, ClassFilter classFilter) {
         StringBuilder sb = new StringBuilder();
         domain.getClasses().values().stream()
                 .sorted()
-                .filter(filter::match)
+                .filter(classFilter::match)
                 .forEach(
                         c -> {
                             sb.append(c.getFullName()).append(" (" + c.getTraces().size() + ")").append("\n");
@@ -87,13 +83,13 @@ public class TxtDomainPublisher extends Publisher {
                 .forEach(t -> sb.append("    " + t.getName()).append("\n"));
     }
 
-    public void publishDomainClassDetails(Domain domain, Filter filter) {
-        if (filter == null) {
+    public void publishDomainClassDetails(Domain domain, ClassFilter classFilter) {
+        if (classFilter == null) {
             domain.getClasses().values().stream()
                     .forEach(c -> publish(c));
         } else {
             domain.getClasses().values().stream()
-                    .filter(filter::match)
+                    .filter(classFilter::match)
                     .forEach(c -> publish(c));
         }
     }
