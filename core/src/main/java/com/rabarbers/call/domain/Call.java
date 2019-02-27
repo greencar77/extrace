@@ -5,45 +5,45 @@ import java.util.Objects;
 
 public class Call {
     private String indent;
-    private String packageX;
-    private String classX;
-    private String methodX;
+    private String packageName;
+    private String className;
+    private String methodName;
     private String signatureX;
 
-    public Call(String indent, String packageX, String classX, String methodX, String signatureX) {
-        this(packageX, classX, methodX, signatureX);
+    public Call(String indent, String packageName, String className, String methodName, String signatureX) {
+        this(packageName, className, methodName, signatureX);
         this.indent = indent;
     }
 
-    public Call(String packageX, String classX, String methodX, String signatureX) {
-        this.packageX = packageX;
-        this.classX = classX;
-        this.methodX = methodX;
+    public Call(String packageName, String className, String methodName, String signatureX) {
+        this.packageName = packageName;
+        this.className = className;
+        this.methodName = methodName;
         this.signatureX = signatureX;
     }
 
-    public String getPackageX() {
-        return packageX;
+    public String getPackageName() {
+        return packageName;
     }
 
-    public void setPackageX(String packageX) {
-        this.packageX = packageX;
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
     }
 
-    public String getClassX() {
-        return classX;
+    public String getClassName() {
+        return className;
     }
 
-    public void setClassX(String classX) {
-        this.classX = classX;
+    public void setClassName(String className) {
+        this.className = className;
     }
 
-    public String getMethodX() {
-        return methodX;
+    public String getMethodName() {
+        return methodName;
     }
 
-    public void setMethodX(String methodX) {
-        this.methodX = methodX;
+    public void setMethodName(String methodName) {
+        this.methodName = methodName;
     }
 
     public String getSignatureX() {
@@ -55,19 +55,19 @@ public class Call {
     }
 
     public String getClassFullName() {
-        return packageX + "." + classX;
+        return packageName + "." + className;
     }
 
     public String getMethodLocalId() {
-        return methodX + signatureX;
+        return methodName + signatureX;
     }
 
     public String getMethodGlobalId() {
-        return packageX + "." + classX + methodX + signatureX;
+        return packageName + "." + className + methodName + signatureX;
     }
 
     public String shortVersion() {
-        return methodX + " " + "(" + classX + ")";
+        return methodName + " " + "(" + className + ")";
     }
 
     public String getIndent() {
@@ -85,24 +85,24 @@ public class Call {
 
         Call call = (Call) o;
         return Objects.equals(getIndent(), call.getIndent()) &&
-                Objects.equals(getPackageX(), call.getPackageX()) &&
-                Objects.equals(getClassX(), call.getClassX()) &&
-                Objects.equals(getMethodX(), call.getMethodX()) &&
+                Objects.equals(getPackageName(), call.getPackageName()) &&
+                Objects.equals(getClassName(), call.getClassName()) &&
+                Objects.equals(getMethodName(), call.getMethodName()) &&
                 Objects.equals(getSignatureX(), call.getSignatureX());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getIndent(), getPackageX(), getClassX(), getMethodX(), getSignatureX());
+        return Objects.hash(getIndent(), getPackageName(), getClassName(), getMethodName(), getSignatureX());
     }
 
     @Override
     public String toString() {
         return "Call{" +
                 "indent='" + indent + '\'' +
-                ", packageX='" + packageX + '\'' +
-                ", classX='" + classX + '\'' +
-                ", methodX='" + methodX + '\'' +
+                ", packageName='" + packageName + '\'' +
+                ", className='" + className + '\'' +
+                ", methodName='" + methodName + '\'' +
                 ", signatureX='" + signatureX + '\'' +
                 '}';
     }

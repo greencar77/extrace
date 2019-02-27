@@ -12,7 +12,7 @@ public class ClassX implements Comparable<ClassX> {
     private Set<Trace> traces = new HashSet<>();
 
     public ClassX(Call call) {
-        this(call.getPackageX(), call.getClassX());
+        this(call.getPackageName(), call.getClassName());
     }
 
     public ClassX(String packageX, String name) {

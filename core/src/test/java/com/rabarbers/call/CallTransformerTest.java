@@ -24,9 +24,9 @@ public class CallTransformerTest extends TestCase {
     public void convertToCallTrimmed_simple() {
         Call call = CallTransformer.convertToCallTrimmed("com.rabarbers.verbalmodeler.sim.renderer.HeapRenderer#render", null);
 
-        assertEquals("com.rabarbers.verbalmodeler.sim.renderer", call.getPackageX());
-        assertEquals("HeapRenderer", call.getClassX());
-        assertEquals("render", call.getMethodX());
+        assertEquals("com.rabarbers.verbalmodeler.sim.renderer", call.getPackageName());
+        assertEquals("HeapRenderer", call.getClassName());
+        assertEquals("render", call.getMethodName());
         assertEquals("()", call.getSignatureX());
     }
 
@@ -44,9 +44,9 @@ public class CallTransformerTest extends TestCase {
         //copied from class
         Call call = CallTransformer.convertToCallTrimmed("com.rabarbers.call.Alpha.Alpha", null);
 
-        assertEquals("com.rabarbers.call", call.getPackageX());
-        assertEquals("Alpha", call.getClassX());
-        assertEquals("Alpha", call.getMethodX());
+        assertEquals("com.rabarbers.call", call.getPackageName());
+        assertEquals("Alpha", call.getClassName());
+        assertEquals("Alpha", call.getMethodName());
         assertEquals("()", call.getSignatureX());
     }
 
@@ -56,9 +56,9 @@ public class CallTransformerTest extends TestCase {
         //copied from class (for example, from Beta)
         Call call = CallTransformer.convertToCallTrimmed("com.rabarbers.call.Alpha", null);
 
-        assertEquals("com.rabarbers.call", call.getPackageX());
-        assertEquals("Alpha", call.getClassX());
-        assertEquals("Alpha", call.getMethodX());
+        assertEquals("com.rabarbers.call", call.getPackageName());
+        assertEquals("Alpha", call.getClassName());
+        assertEquals("Alpha", call.getMethodName());
         assertEquals("()", call.getSignatureX());
     }
 
@@ -67,9 +67,9 @@ public class CallTransformerTest extends TestCase {
     public void convertToCallTrimmed_simpleRightPadded() {
         Call call = CallTransformer.convertToCallTrimmed("com.rabarbers.verbalmodeler.sim.renderer.HeapRenderer#render    ", null);
 
-        assertEquals("com.rabarbers.verbalmodeler.sim.renderer", call.getPackageX());
-        assertEquals("HeapRenderer", call.getClassX());
-        assertEquals("render", call.getMethodX());
+        assertEquals("com.rabarbers.verbalmodeler.sim.renderer", call.getPackageName());
+        assertEquals("HeapRenderer", call.getClassName());
+        assertEquals("render", call.getMethodName());
         assertEquals("()", call.getSignatureX());
     }
 
@@ -78,9 +78,9 @@ public class CallTransformerTest extends TestCase {
         Call call = CallTransformer.convertToCallWithWhitespace("    com.rabarbers.verbalmodeler.sim.renderer.HeapRenderer#render", null);
 
         assertEquals("    ", call.getIndent());
-        assertEquals("com.rabarbers.verbalmodeler.sim.renderer", call.getPackageX());
-        assertEquals("HeapRenderer", call.getClassX());
-        assertEquals("render", call.getMethodX());
+        assertEquals("com.rabarbers.verbalmodeler.sim.renderer", call.getPackageName());
+        assertEquals("HeapRenderer", call.getClassName());
+        assertEquals("render", call.getMethodName());
         assertEquals("()", call.getSignatureX());
     }
 
@@ -95,9 +95,9 @@ public class CallTransformerTest extends TestCase {
         Call call = CallTransformer.convertToCallWithWhitespace("\tcom.rabarbers.verbalmodeler.sim.renderer.HeapRenderer#render", null);
 
         assertEquals("\t", call.getIndent());
-        assertEquals("com.rabarbers.verbalmodeler.sim.renderer", call.getPackageX());
-        assertEquals("HeapRenderer", call.getClassX());
-        assertEquals("render", call.getMethodX());
+        assertEquals("com.rabarbers.verbalmodeler.sim.renderer", call.getPackageName());
+        assertEquals("HeapRenderer", call.getClassName());
+        assertEquals("render", call.getMethodName());
         assertEquals("()", call.getSignatureX());
     }
 
@@ -106,9 +106,9 @@ public class CallTransformerTest extends TestCase {
         Call call = CallTransformer.convertToCallWithWhitespace("\t\t   com.rabarbers.verbalmodeler.sim.renderer.HeapRenderer#render", null);
 
         assertEquals("\t\t   ", call.getIndent());
-        assertEquals("com.rabarbers.verbalmodeler.sim.renderer", call.getPackageX());
-        assertEquals("HeapRenderer", call.getClassX());
-        assertEquals("render", call.getMethodX());
+        assertEquals("com.rabarbers.verbalmodeler.sim.renderer", call.getPackageName());
+        assertEquals("HeapRenderer", call.getClassName());
+        assertEquals("render", call.getMethodName());
         assertEquals("()", call.getSignatureX());
     }
 
