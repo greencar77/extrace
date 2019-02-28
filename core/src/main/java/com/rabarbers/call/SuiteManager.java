@@ -54,10 +54,12 @@ public class SuiteManager {
                                 if (!domainMethods.containsKey(call.getMethodGlobalId())) {
                                     methodX = new MethodX(call);
                                     domainMethods.put(call.getMethodGlobalId(), methodX);
+                                    bind(methodX, classX);
                                 } else {
                                     methodX = domainMethods.get(call.getMethodGlobalId());
                                 }
                                 bind(trace, methodX);
+                                bind(call, methodX);
 
                                 //method local
                                 if (!classX.getMethods().containsKey(call.getMethodLocalId())) {
@@ -76,5 +78,13 @@ public class SuiteManager {
     private void bind(Trace trace, MethodX methodX) {
         trace.getMethods().add(methodX);
         methodX.getTraces().add(trace);
+    }
+
+    private void bind(Call call, MethodX methodX) {
+        call.setMethodX(methodX);
+    }
+
+    private void bind(MethodX methodX, ClassX classX) {
+        methodX.setClassX(classX);
     }
 }

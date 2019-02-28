@@ -19,6 +19,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class CallTransformer {
+    public static final int TAB_SIZE = 2;
+
     private static final Pattern PATTERN = Pattern.compile("^(\\s*)(.*)");
     public static final String UNKNOWN = "...";
     public static final String UNKNOWN_EXCEL = "…";
@@ -101,7 +103,22 @@ public class CallTransformer {
 
         Call result = convertToCallTrimmed(statement.trim(), aliases);
         if (result != null && indent != null) {
-            result.setIndent(indent);
+            int depth = 0;
+            if (indent.startsWith("\t")) {
+                depth = indent.length();
+                if (indent.contains(" ")) {
+                    throw new RuntimeException("Mixed indent: [" + indent + "]");
+                }
+            } else if (indent.startsWith(" ")) {
+                if (indent.length() % TAB_SIZE != 0) {
+                    throw new RuntimeException("Invalid indent length: [" + indent + "]" + " " + indent.length());
+                } else {
+                    depth = indent.length() / TAB_SIZE;
+                }
+            } else {
+                throw new RuntimeException("Invalid indent: [" + indent + "]");
+            }
+            result.setDepth(depth);
         }
         return result;
     }
@@ -123,7 +140,7 @@ public class CallTransformer {
         convertToList(sourceFile, aliases).stream()
                 .filter(call -> call != null)
                 .forEach(call -> {
-                    sb.append(call.getIndent() + call.shortVersion()).append("\r\n");
+                    sb.append(depthToIndent(call.getDepth()) + call.shortVersion()).append("\r\n");
                 });
 
         File result = new File(destinationPath);
@@ -147,5 +164,13 @@ public class CallTransformer {
         }
 
         return result;
+    }
+
+    private static String depthToIndent(int depth) {
+        StringBuilder sb = new StringBuilder(); //TODO more effectively with patterns
+        for (int i = 0; i<depth; i++) {
+            sb.append("  "); //TODO
+        }
+        return sb.toString();
     }
 }

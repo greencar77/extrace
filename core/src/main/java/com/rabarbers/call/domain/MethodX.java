@@ -7,6 +7,7 @@ public class MethodX implements Comparable<MethodX> {
     private String name;
     private String signatureX;
     private Set<Trace> traces = new HashSet<>();
+    private ClassX classX;
 
     public MethodX(Call call) {
         this.name = call.getMethodName();
@@ -23,6 +24,14 @@ public class MethodX implements Comparable<MethodX> {
 
     public String getMethodLocalId() {
         return name + signatureX;
+    }
+
+    public ClassX getClassX() {
+        return classX;
+    }
+
+    public void setClassX(ClassX classX) {
+        this.classX = classX;
     }
 
     @Override

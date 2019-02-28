@@ -34,6 +34,7 @@ public class CallTransformerTest extends TestCase {
     public void convertToCallTrimmed_alias() {
         Map<String, String> aliases = new HashMap<>();
         aliases.put("stream", "...");
+        aliases.put("class_init", "...");
         Call call = CallTransformer.convertToCallTrimmed("stream", aliases);
 
         assertNull(call);
@@ -77,7 +78,7 @@ public class CallTransformerTest extends TestCase {
     public void convertToCallWithWhitespace_indent() {
         Call call = CallTransformer.convertToCallWithWhitespace("    com.rabarbers.verbalmodeler.sim.renderer.HeapRenderer#render", null);
 
-        assertEquals("    ", call.getIndent());
+        assertEquals(2, call.getDepth());
         assertEquals("com.rabarbers.verbalmodeler.sim.renderer", call.getPackageName());
         assertEquals("HeapRenderer", call.getClassName());
         assertEquals("render", call.getMethodName());
@@ -94,7 +95,7 @@ public class CallTransformerTest extends TestCase {
     public void convertToCallWithWhitespace_indentTabs() {
         Call call = CallTransformer.convertToCallWithWhitespace("\tcom.rabarbers.verbalmodeler.sim.renderer.HeapRenderer#render", null);
 
-        assertEquals("\t", call.getIndent());
+        assertEquals(1, call.getDepth());
         assertEquals("com.rabarbers.verbalmodeler.sim.renderer", call.getPackageName());
         assertEquals("HeapRenderer", call.getClassName());
         assertEquals("render", call.getMethodName());
@@ -103,9 +104,9 @@ public class CallTransformerTest extends TestCase {
 
     @Test
     public void convertToCallWithWhitespace_indentMixedTabsWithSpaces() {
-        Call call = CallTransformer.convertToCallWithWhitespace("\t\t   com.rabarbers.verbalmodeler.sim.renderer.HeapRenderer#render", null);
+        Call call = CallTransformer.convertToCallWithWhitespace("\t\t\t\t\tcom.rabarbers.verbalmodeler.sim.renderer.HeapRenderer#render", null);
 
-        assertEquals("\t\t   ", call.getIndent());
+        assertEquals(5, call.getDepth());
         assertEquals("com.rabarbers.verbalmodeler.sim.renderer", call.getPackageName());
         assertEquals("HeapRenderer", call.getClassName());
         assertEquals("render", call.getMethodName());
@@ -115,9 +116,9 @@ public class CallTransformerTest extends TestCase {
     @Test
     public void convertToList_convertToListStream() {
         List<Call> expected = new ArrayList<>();
-        expected.add(new Call("  ", "com.rabarbers.verbalmodeler.sim.renderer", "HeapRenderer", "render", "()"));
-        expected.add(new Call("    ", "com.rabarbers.verbalmodeler.sim", "Publisher", "printPage", "(int, com.rabarbers.verbalmodeler.sim.story.Story)"));
-        expected.add(new Call("      ", "com.rabarbers.verbalmodeler.sim", "Publisher", "publish", "()"));
+        expected.add(new Call(1, "com.rabarbers.verbalmodeler.sim.renderer", "HeapRenderer", "render", "()"));
+        expected.add(new Call(2, "com.rabarbers.verbalmodeler.sim", "Publisher", "printPage", "(int, com.rabarbers.verbalmodeler.sim.story.Story)"));
+        expected.add(new Call(3, "com.rabarbers.verbalmodeler.sim", "Publisher", "publish", "()"));
 
         StringBuilder sb = new StringBuilder();
         sb.append("  com.rabarbers.verbalmodeler.sim.renderer.HeapRenderer#render").append("\n");
@@ -133,9 +134,9 @@ public class CallTransformerTest extends TestCase {
     @Test
     public void convertToList_convertToListFile() {
         List<Call> expected = new ArrayList<>();
-        expected.add(new Call("  ", "com.rabarbers.verbalmodeler.sim.renderer", "HeapRenderer", "render", "()"));
-        expected.add(new Call("    ", "com.rabarbers.verbalmodeler.sim", "Publisher", "printPage", "(int, com.rabarbers.verbalmodeler.sim.story.Story)"));
-        expected.add(new Call("      ", "com.rabarbers.verbalmodeler.sim", "Publisher", "publish", "()"));
+        expected.add(new Call(1, "com.rabarbers.verbalmodeler.sim.renderer", "HeapRenderer", "render", "()"));
+        expected.add(new Call(2, "com.rabarbers.verbalmodeler.sim", "Publisher", "printPage", "(int, com.rabarbers.verbalmodeler.sim.story.Story)"));
+        expected.add(new Call(3, "com.rabarbers.verbalmodeler.sim", "Publisher", "publish", "()"));
 
         File file = new File("src/test/resources/calls.txt");
 
@@ -227,7 +228,7 @@ public class CallTransformerTest extends TestCase {
         List<Call> expected = new ArrayList<>();
         expected.add(null);
         expected.add(null);
-        expected.add(new Call("      ", "com.rabarbers.verbalmodeler.sim", "Publisher", "publish", "()"));
+        expected.add(new Call(3, "com.rabarbers.verbalmodeler.sim", "Publisher", "publish", "()"));
 
         StringBuilder sb = new StringBuilder();
         sb.append("").append("\n");
