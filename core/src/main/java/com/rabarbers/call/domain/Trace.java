@@ -6,21 +6,21 @@ import java.util.Set;
 
 public class Trace implements Comparable<Trace> {
     private String name;
-    private List<Call> calls;
+    private List<CallRow> callRows;
     private Set<ClassX> classes = new HashSet<>();
     private Set<MethodX> methods = new HashSet<>();
 
-    public Trace(String name, List<Call> calls) {
+    public Trace(String name, List<CallRow> callRows) {
         this.name = name;
-        this.calls = calls;
+        this.callRows = callRows;
     }
 
     public String getName() {
         return name;
     }
 
-    public List<Call> getCalls() {
-        return calls;
+    public List<CallRow> getCallRows() {
+        return callRows;
     }
 
     public Set<ClassX> getClasses() {

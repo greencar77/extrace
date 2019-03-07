@@ -3,7 +3,7 @@ package com.rabarbers.call.domain;
 import java.util.Objects;
 
 
-public class Call {
+public class CallRow {
     private int depth;
     private String packageName;
     private String className;
@@ -11,12 +11,12 @@ public class Call {
     private String signatureX;
     private MethodX methodX;
 
-    public Call(int depth, String packageName, String className, String methodName, String signatureX) {
+    public CallRow(int depth, String packageName, String className, String methodName, String signatureX) {
         this(packageName, className, methodName, signatureX);
         this.depth = depth;
     }
 
-    public Call(String packageName, String className, String methodName, String signatureX) {
+    public CallRow(String packageName, String className, String methodName, String signatureX) {
         this.packageName = packageName;
         this.className = className;
         this.methodName = methodName;
@@ -91,13 +91,13 @@ public class Call {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Call call = (Call) o;
-        return depth == call.depth &&
-                Objects.equals(packageName, call.packageName) &&
-                Objects.equals(className, call.className) &&
-                Objects.equals(methodName, call.methodName) &&
-                Objects.equals(signatureX, call.signatureX) &&
-                Objects.equals(methodX, call.methodX);
+        CallRow callRow = (CallRow) o;
+        return depth == callRow.depth &&
+                Objects.equals(packageName, callRow.packageName) &&
+                Objects.equals(className, callRow.className) &&
+                Objects.equals(methodName, callRow.methodName) &&
+                Objects.equals(signatureX, callRow.signatureX) &&
+                Objects.equals(methodX, callRow.methodX);
     }
 
     @Override
@@ -108,7 +108,7 @@ public class Call {
 
     @Override
     public String toString() {
-        return "Call{" +
+        return "CallRow{" +
                 "depth=" + depth +
                 ", packageName='" + packageName + '\'' +
                 ", className='" + className + '\'' +

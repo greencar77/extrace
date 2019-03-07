@@ -1,6 +1,6 @@
 package com.rabarbers.call;
 
-import com.rabarbers.call.domain.Call;
+import com.rabarbers.call.domain.CallRow;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -27,7 +27,7 @@ public class CallTransformer {
     public static final String COMMENT_MARK = "//";
     public static final String INTELLIJ_METHOD_SEPARATOR = "#";
 
-    public static Call convertToCallTrimmed(String statement, Map<String, String> aliases) {
+    public static CallRow convertToCallTrimmed(String statement, Map<String, String> aliases) {
         if (statement == null || statement.trim().length() == 0) {
             return null;
         } else {
@@ -50,7 +50,7 @@ public class CallTransformer {
         String method = packageToMethod.substring(packageAndClass.length() + 1);
         String signature = statement.substring(statement.indexOf("("));
 
-        return new Call(packageAndClass.substring(0, packageAndClass.lastIndexOf(".")),
+        return new CallRow(packageAndClass.substring(0, packageAndClass.lastIndexOf(".")),
                 packageAndClass.substring(packageAndClass.lastIndexOf(".") + 1),
                 method, signature);
     }
@@ -82,7 +82,7 @@ public class CallTransformer {
         return statement.contains("#");
     }
 
-    public static Call convertToCallWithWhitespace(String statement, Map<String, String> aliases) {
+    public static CallRow convertToCallWithWhitespace(String statement, Map<String, String> aliases) {
         if (statement == null || statement.trim().length() == 0) {
             return null;
         } else {
@@ -101,7 +101,7 @@ public class CallTransformer {
             }
         }
 
-        Call result = convertToCallTrimmed(statement.trim(), aliases);
+        CallRow result = convertToCallTrimmed(statement.trim(), aliases);
         if (result != null && indent != null) {
             int depth = 0;
             if (indent.startsWith("\t")) {
@@ -123,7 +123,7 @@ public class CallTransformer {
         return result;
     }
 
-    public static List<Call> convertToList(File file, Map<String, String> aliases) {
+    public static List<CallRow> convertToList(File file, Map<String, String> aliases) {
         try {
             return convertToList(new FileInputStream(file), aliases);
         } catch (FileNotFoundException e) {
@@ -152,8 +152,8 @@ public class CallTransformer {
         return result;
     }
 
-    public static List<Call> convertToList(InputStream is, Map<String, String> aliases) {
-        List<Call> result = new ArrayList<>();
+    public static List<CallRow> convertToList(InputStream is, Map<String, String> aliases) {
+        List<CallRow> result = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
             String line;
             while ((line = br.readLine()) != null) {

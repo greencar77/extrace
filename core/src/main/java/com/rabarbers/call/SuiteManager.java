@@ -1,6 +1,6 @@
 package com.rabarbers.call;
 
-import com.rabarbers.call.domain.Call;
+import com.rabarbers.call.domain.CallRow;
 import com.rabarbers.call.domain.ClassX;
 import com.rabarbers.call.domain.MethodX;
 import com.rabarbers.call.domain.Suite;
@@ -12,10 +12,11 @@ import java.util.List;
 import java.util.Map;
 
 public class SuiteManager {
+
     public void appendTrace(Suite suite, File file) {
         System.out.println("Append trace: " + file.getAbsoluteFile());
-        List<Call> calls = CallTransformer.convertToList(file, suite.getAliases());
-        suite.getTraces().add(new Trace(file.getName(), calls));
+        List<CallRow> callRows = CallTransformer.convertToList(file, suite.getAliases());
+        suite.getTraces().add(new Trace(file.getName(), callRows));
     }
 
     public void appendTraceFromFolder(Suite suite, String folderPath) {
@@ -36,7 +37,7 @@ public class SuiteManager {
 
         suite.getTraces()
                 .forEach(trace -> {
-                    trace.getCalls().stream()
+                    trace.getCallRows().stream()
                             .filter(c -> c != null)
                             .forEach(call -> {
                                 //class global
@@ -80,8 +81,8 @@ public class SuiteManager {
         methodX.getTraces().add(trace);
     }
 
-    private void bind(Call call, MethodX methodX) {
-        call.setMethodX(methodX);
+    private void bind(CallRow callRow, MethodX methodX) {
+        callRow.setMethodX(methodX);
     }
 
     private void bind(MethodX methodX, ClassX classX) {

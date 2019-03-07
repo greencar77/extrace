@@ -11,8 +11,8 @@ public class ClassX implements Comparable<ClassX> {
     private Map<String, MethodX> methods = new HashMap<>();
     private Set<Trace> traces = new HashSet<>();
 
-    public ClassX(Call call) {
-        this(call.getPackageName(), call.getClassName());
+    public ClassX(CallRow callRow) {
+        this(callRow.getPackageName(), callRow.getClassName());
     }
 
     public ClassX(String packageX, String name) {

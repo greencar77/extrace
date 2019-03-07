@@ -9,9 +9,9 @@ public class MethodX implements Comparable<MethodX> {
     private Set<Trace> traces = new HashSet<>();
     private ClassX classX;
 
-    public MethodX(Call call) {
-        this.name = call.getMethodName();
-        this.signatureX = call.getSignatureX();
+    public MethodX(CallRow callRow) {
+        this.name = callRow.getMethodName();
+        this.signatureX = callRow.getSignatureX();
     }
 
     public String getName() {
