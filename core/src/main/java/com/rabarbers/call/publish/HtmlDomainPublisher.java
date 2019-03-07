@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 public class HtmlDomainPublisher extends Publisher implements DomainPublisher {
 
     public static final String BR = "<br/>\n";
+    public static final String TAB = "|&nbsp;&nbsp;";
 
     public void publishDomainClasses(Domain domain, String path, ClassFilter classFilter) {
         HtmlPage root = new HtmlPage("Classes");
@@ -127,7 +128,8 @@ public class HtmlDomainPublisher extends Publisher implements DomainPublisher {
 
     private String traceLink(ClassX fromClass, Trace trace) {
         String backtrack = StringUtils.repeat("../", fromClass.packageCount() + 1); //+1 for "classes/"
-        return "<a href=\"" + backtrack + "traces/" + trace.getName() + ".html" + "\">" + trace.getName() + "</a>";
+        return "<a href=\"" + backtrack + "traces/" + trace.getName() + ".html" + "\">" + trace.getName() + "</a>"
+                + " (" + trace.getCalls().size() + ")";
     }
 
     protected void methodDetails(StringBuilder sb, MethodX method) {
@@ -159,9 +161,19 @@ public class HtmlDomainPublisher extends Publisher implements DomainPublisher {
         writeFileWrapper("html/traces/" + trace.getName() + ".html", root);
     }
 
+//    protected void appendTraceDetails(StringBuilder sb, Trace trace) {
+//        trace.getCalls().forEach(c -> {
+//            sb.append(StringUtils.repeat(TAB, c.getDepth()))
+//                    .append(c.getMethod().getMethodLocalId())
+//                    .append(BR);
+//        });
+//    }
+
     protected void appendTraceDetails(StringBuilder sb, Trace trace) {
         trace.getCalls().forEach(c -> {
-            sb.append(c.getMethod().getMethodLocalId()).append(BR);
+            sb.append(c.getDepth() == 0? "" : StringUtils.repeat(TAB, c.getDepth() - 1) + "|--")
+                    .append(c.getMethod().getMethodLocalId())
+                    .append(BR);
         });
     }
 }
