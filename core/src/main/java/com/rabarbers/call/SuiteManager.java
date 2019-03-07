@@ -1,5 +1,6 @@
 package com.rabarbers.call;
 
+import com.rabarbers.call.domain.Call;
 import com.rabarbers.call.domain.CallRow;
 import com.rabarbers.call.domain.ClassX;
 import com.rabarbers.call.domain.MethodX;
@@ -10,13 +11,64 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class SuiteManager {
 
     public void appendTrace(Suite suite, File file) {
         System.out.println("Append trace: " + file.getAbsoluteFile());
         List<CallRow> callRows = CallTransformer.convertToList(file, suite.getAliases());
-        suite.getTraces().add(new Trace(file.getName(), callRows));
+        suite.getTraces().add(createTrace(suite, file.getName(), callRows));
+    }
+
+    private Trace createTrace(Suite suite, String name, List<CallRow> callRows) {
+        Map<String, ClassX> domainClasses = suite.getDomain().getClasses();
+        Map<String, MethodX> domainMethods = suite.getDomain().getMethods();
+
+        Trace result = new Trace(name);
+
+        List<Call> calls = callRows.stream()
+                .filter(c -> c != null)
+                .map(call -> {
+                    ClassX classX = registerClass(domainClasses, result, call);
+                    MethodX methodX = registerMethod(domainMethods, result, classX, call);
+                    return new Call(call.getDepth(), methodX);
+                })
+                .collect(Collectors.toList());
+
+        return result;
+    }
+
+    private ClassX registerClass(Map<String, ClassX> domainClasses, Trace trace, CallRow call) {
+        ClassX resultClass;
+        if (!domainClasses.containsKey(call.getClassFullName())) {
+            resultClass = new ClassX(call);
+            domainClasses.put(resultClass.getFullName(), resultClass);
+        } else {
+            resultClass = domainClasses.get(call.getClassFullName());
+        }
+        bind(trace, resultClass);
+
+        return resultClass;
+    }
+
+    private MethodX registerMethod(Map<String, MethodX> domainMethods, Trace trace, ClassX classX, CallRow call) {
+        MethodX resultMethod;
+        if (!domainMethods.containsKey(call.getMethodGlobalId())) {
+            resultMethod = new MethodX(call);
+            domainMethods.put(call.getMethodGlobalId(), resultMethod);
+            bind(resultMethod, classX);
+        } else {
+            resultMethod = domainMethods.get(call.getMethodGlobalId());
+        }
+        bind(trace, resultMethod);
+
+        //method local
+        if (!classX.getMethods().containsKey(call.getMethodLocalId())) {
+            classX.getMethods().put(resultMethod.getMethodLocalId(), resultMethod);
+        }
+
+        return resultMethod;
     }
 
     public void appendTraceFromFolder(Suite suite, String folderPath) {
@@ -31,46 +83,6 @@ public class SuiteManager {
                 });
     }
 
-    public void extractDomain(Suite suite) {
-        Map<String, ClassX> domainClasses = suite.getDomain().getClasses();
-        Map<String, MethodX> domainMethods = suite.getDomain().getMethods();
-
-        suite.getTraces()
-                .forEach(trace -> {
-                    trace.getCallRows().stream()
-                            .filter(c -> c != null)
-                            .forEach(call -> {
-                                //class global
-                                ClassX classX;
-                                if (!domainClasses.containsKey(call.getClassFullName())) {
-                                    classX = new ClassX(call);
-                                    domainClasses.put(classX.getFullName(), classX);
-                                } else {
-                                    classX = domainClasses.get(call.getClassFullName());
-                                }
-                                bind(trace, classX);
-
-                                //method global
-                                MethodX methodX;
-                                if (!domainMethods.containsKey(call.getMethodGlobalId())) {
-                                    methodX = new MethodX(call);
-                                    domainMethods.put(call.getMethodGlobalId(), methodX);
-                                    bind(methodX, classX);
-                                } else {
-                                    methodX = domainMethods.get(call.getMethodGlobalId());
-                                }
-                                bind(trace, methodX);
-                                bind(call, methodX);
-
-                                //method local
-                                if (!classX.getMethods().containsKey(call.getMethodLocalId())) {
-                                    classX.getMethods().put(methodX.getMethodLocalId(), methodX);
-                                }
-                            });
-                });
-
-    }
-
     private void bind(Trace trace, ClassX classX) {
         trace.getClasses().add(classX);
         classX.getTraces().add(trace);
@@ -79,10 +91,6 @@ public class SuiteManager {
     private void bind(Trace trace, MethodX methodX) {
         trace.getMethods().add(methodX);
         methodX.getTraces().add(trace);
-    }
-
-    private void bind(CallRow callRow, MethodX methodX) {
-        callRow.setMethodX(methodX);
     }
 
     private void bind(MethodX methodX, ClassX classX) {

@@ -9,7 +9,6 @@ public class CallRow {
     private String className;
     private String methodName;
     private String signatureX;
-    private MethodX methodX;
 
     public CallRow(int depth, String packageName, String className, String methodName, String signatureX) {
         this(packageName, className, methodName, signatureX);
@@ -79,14 +78,6 @@ public class CallRow {
         this.depth = depth;
     }
 
-    public MethodX getMethodX() {
-        return methodX;
-    }
-
-    public void setMethodX(MethodX methodX) {
-        this.methodX = methodX;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -96,14 +87,13 @@ public class CallRow {
                 Objects.equals(packageName, callRow.packageName) &&
                 Objects.equals(className, callRow.className) &&
                 Objects.equals(methodName, callRow.methodName) &&
-                Objects.equals(signatureX, callRow.signatureX) &&
-                Objects.equals(methodX, callRow.methodX);
+                Objects.equals(signatureX, callRow.signatureX);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(depth, packageName, className, methodName, signatureX, methodX);
+        return Objects.hash(depth, packageName, className, methodName, signatureX);
     }
 
     @Override
@@ -114,7 +104,6 @@ public class CallRow {
                 ", className='" + className + '\'' +
                 ", methodName='" + methodName + '\'' +
                 ", signatureX='" + signatureX + '\'' +
-                ", methodX=" + methodX +
                 '}';
     }
 }
