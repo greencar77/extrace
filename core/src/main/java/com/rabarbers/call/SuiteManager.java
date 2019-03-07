@@ -18,7 +18,7 @@ public class SuiteManager {
     public void appendTrace(Suite suite, File file) {
         System.out.println("Append trace: " + file.getAbsoluteFile());
         List<CallRow> callRows = CallTransformer.convertToList(file, suite.getAliases());
-        suite.getTraces().add(createTrace(suite, file.getName(), callRows));
+        suite.getDomain().getTraces().add(createTrace(suite, file.getName(), callRows));
     }
 
     private Trace createTrace(Suite suite, String name, List<CallRow> callRows) {

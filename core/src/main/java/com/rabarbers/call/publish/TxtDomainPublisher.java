@@ -9,7 +9,7 @@ import com.rabarbers.call.filter.ClassFilter;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class TxtDomainPublisher extends Publisher {
+public class TxtDomainPublisher extends Publisher implements DomainPublisher {
 
     public void publishDomainClasses(Domain domain, String path) {
         StringBuilder sb = new StringBuilder();

@@ -13,7 +13,7 @@ public class StatisticsPublisher extends Publisher {
 
     public void publish(Suite suite, String path) {
         StringBuilder sb = new StringBuilder();
-        sb.append("Traces: " + suite.getTraces().size()).append("\n");
+        sb.append("Traces: " + suite.getDomain().getTraces().size()).append("\n");
         writeFileWrapper(path, sb);
     }
 
@@ -25,6 +25,7 @@ public class StatisticsPublisher extends Publisher {
                 .mapToInt(Integer::intValue)
                 .sum();
         sb.append("Methods: " + methodCount).append("\n");
+        sb.append("Traces: " + domain.getTraces().size()).append("\n");
         writeFileWrapper(path, sb);
     }
 

@@ -9,15 +9,10 @@ public class Suite {
     public static final int TAB_SIZE = 2;
 
     private Domain domain = new Domain();
-    private List<Trace> traces = new ArrayList<>();
     private Map<String, String> aliases = new HashMap<>();
 
     public Domain getDomain() {
         return domain;
-    }
-
-    public List<Trace> getTraces() {
-        return traces;
     }
 
     public Map<String, String> getAliases() {

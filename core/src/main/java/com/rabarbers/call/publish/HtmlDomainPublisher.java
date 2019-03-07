@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class HtmlDomainPublisher extends Publisher {
+public class HtmlDomainPublisher extends Publisher implements DomainPublisher {
 
     public static final String BR = "<br/>\n";
 
