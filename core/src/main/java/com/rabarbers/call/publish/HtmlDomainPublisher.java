@@ -7,6 +7,7 @@ import com.rabarbers.call.domain.Trace;
 import com.rabarbers.call.filter.ClassFilter;
 import com.rabarbers.call.filter.FilterListBuilder;
 import com.rabarbers.call.html.HtmlPage;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -113,7 +114,7 @@ public class HtmlDomainPublisher extends Publisher implements DomainPublisher {
         sb.append("<ul>");
         classTraces.stream()
                 .sorted()
-                .forEach(t -> sb.append("<li>").append(t.getName()).append("</li>"));
+                .forEach(t -> sb.append("<li>").append(traceLink(classX, t)).append("</li>"));
         sb.append("</ul>");
 
         sb.append(BR);
@@ -124,13 +125,43 @@ public class HtmlDomainPublisher extends Publisher implements DomainPublisher {
                 .forEach(m -> methodDetails(sb, m));
     }
 
+    private String traceLink(ClassX fromClass, Trace trace) {
+        String backtrack = StringUtils.repeat("../", fromClass.packageCount() + 1); //+1 for "classes/"
+        return "<a href=\"" + backtrack + "traces/" + trace.getName() + ".html" + "\">" + trace.getName() + "</a>";
+    }
+
     protected void methodDetails(StringBuilder sb, MethodX method) {
         sb.append(BR);
         sb.append(method.getMethodLocalId());
+
+        sb.append(BR);
+        sb.append("Traces:");
         sb.append("<ul>");
         method.getTraces().stream()
                 .sorted()
-                .forEach(t -> sb.append("<li>").append(t.getName()).append("</li>"));
+                .forEach(t -> sb.append("<li>").append(traceLink(method.getClassX(), t)).append("</li>"));
         sb.append("</ul>");
+    }
+
+    @Override
+    public void publishTraceDetails(Domain domain, String path) {
+        domain.getTraces().stream()
+                .forEach(t -> publish(t));
+    }
+
+    private void publish(Trace trace) {
+        HtmlPage root = new HtmlPage(trace.getName());
+
+        StringBuilder sb = new StringBuilder();
+        appendTraceDetails(sb, trace);
+
+        root.getBody().appendChildContent(sb);
+        writeFileWrapper("html/traces/" + trace.getName() + ".html", root);
+    }
+
+    protected void appendTraceDetails(StringBuilder sb, Trace trace) {
+        trace.getCalls().forEach(c -> {
+            sb.append(c.getMethod().getMethodLocalId()).append(BR);
+        });
     }
 }

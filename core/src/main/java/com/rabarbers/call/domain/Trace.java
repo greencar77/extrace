@@ -35,6 +35,10 @@ public class Trace implements Comparable<Trace> {
         return methods;
     }
 
+    public void setCalls(List<Call> calls) {
+        this.calls = calls;
+    }
+
     @Override
     public int compareTo(Trace o) {
         return this.name.compareTo(o.getName());

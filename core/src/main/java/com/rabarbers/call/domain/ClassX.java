@@ -48,4 +48,8 @@ public class ClassX implements Comparable<ClassX> {
     public void setTraces(Set<Trace> traces) {
         this.traces = traces;
     }
+
+    public int packageCount() {
+        return packageX.split("\\.").length;
+    }
 }

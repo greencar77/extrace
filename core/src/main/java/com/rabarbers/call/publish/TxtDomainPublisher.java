@@ -99,4 +99,9 @@ public class TxtDomainPublisher extends Publisher implements DomainPublisher {
         appendClassDetails(sb, classX);
         writeFileWrapper("classes/" + toPath(classX.getPackageX()) + "/" + classX.getName() + ".txt", sb);
     }
+
+    @Override
+    public void publishTraceDetails(Domain domain, String path) {
+        throw new RuntimeException("Not implemented"); //TODO
+    }
 }

@@ -25,7 +25,7 @@ public class SuiteManager {
         Map<String, ClassX> domainClasses = suite.getDomain().getClasses();
         Map<String, MethodX> domainMethods = suite.getDomain().getMethods();
 
-        Trace result = new Trace(name);
+        Trace result = new Trace(name.substring(0, name.lastIndexOf(".")));
 
         List<Call> calls = callRows.stream()
                 .filter(c -> c != null)
@@ -36,6 +36,7 @@ public class SuiteManager {
                 })
                 .collect(Collectors.toList());
 
+        result.setCalls(calls);
         return result;
     }
 
