@@ -28,14 +28,14 @@ public class HtmlDomainPublisher extends Publisher implements DomainPublisher {
             domain.getClasses().values().stream()
                     .sorted()
                     .forEach(c -> {
-                        sb.append("<a href=\"classes\\" + toPath(c.getPackageX()) + "/" + c.getName() + ".html" + "\">" + c.getFullName() + "</a>").append("<br/>").append("\n");
+                        sb.append(classLink(c, c.getFullName(), null)).append("<br/>").append("\n");
                     });
         } else {
             domain.getClasses().values().stream()
                     .sorted()
                     .filter(classFilter::match)
                     .forEach(c -> {
-                        sb.append("<a href=\"classes\\" + toPath(c.getPackageX()) + "/" + c.getName() + ".html" + "\">" + c.getFullName() + "</a>").append("<br/>").append("\n");
+                        sb.append(classLink(c, c.getFullName(), null)).append("<br/>").append("\n");
                     });
         }
 
@@ -43,11 +43,18 @@ public class HtmlDomainPublisher extends Publisher implements DomainPublisher {
         writeFileWrapper(path, root);
     }
 
+    private String classLink(ClassX classX, String caption, String backtrack) {
+        return "<a href=\""
+                + (backtrack == null? "": backtrack)
+                + "classes/"
+                + toPath(classX.getPackageX()) + "/" + classX.getName() + ".html" + "\">" + caption + "</a>";
+    }
+
     private void output(StringBuilder sb, Collection<ClassX> classes) {
         classes.stream()
                 .sorted()
                 .forEach(c -> {
-                    sb.append("<a href=\"classes\\" + toPath(c.getPackageX()) + "/" + c.getName() + ".html" + "\">" + c.getFullName() + "</a>").append("<br/>").append("\n");
+                    sb.append(classLink(c, c.getFullName(), null)).append("<br/>").append("\n");
                 });
     }
 
@@ -88,7 +95,7 @@ public class HtmlDomainPublisher extends Publisher implements DomainPublisher {
     }
 
     private void publish(ClassX classX) {
-        HtmlPage root = new HtmlPage(classX.getName());
+        HtmlPage root = new HtmlPage("C: " + classX.getName());
 
         StringBuilder sb = new StringBuilder();
         appendClassDetails(sb, classX);
@@ -152,7 +159,7 @@ public class HtmlDomainPublisher extends Publisher implements DomainPublisher {
     }
 
     private void publish(Trace trace) {
-        HtmlPage root = new HtmlPage(trace.getName());
+        HtmlPage root = new HtmlPage("T: " + trace.getName());
 
         StringBuilder sb = new StringBuilder();
         appendTraceDetails(sb, trace);
@@ -172,7 +179,8 @@ public class HtmlDomainPublisher extends Publisher implements DomainPublisher {
     protected void appendTraceDetails(StringBuilder sb, Trace trace) {
         trace.getCalls().forEach(c -> {
             sb.append(c.getDepth() == 0? "" : StringUtils.repeat(TAB, c.getDepth() - 1) + "|--")
-                    .append(c.getMethod().getMethodLocalId())
+                    .append(c.getMethod().getName())
+                    .append(" (" + classLink(c.getMethod().getClassX(), c.getMethod().getClassX().getName(), "../") + ")")
                     .append(BR);
         });
     }
