@@ -18,7 +18,9 @@ import java.util.stream.Collectors;
 public class HtmlDomainPublisher extends Publisher implements DomainPublisher {
 
     public static final String BR = "<br/>\n";
-    public static final String TAB = "|&nbsp;&nbsp;";
+    public static final int TAB_SIZE = 4;
+    public static final String EMPTY_TAB = "|" + StringUtils.repeat("&nbsp;", TAB_SIZE);
+    public static final String FILLED_TAB = "|" + StringUtils.repeat("-", TAB_SIZE);
 
     public void publishDomainClasses(Domain domain, String path, ClassFilter classFilter) {
         HtmlPage root = new HtmlPage("Classes");
@@ -178,7 +180,7 @@ public class HtmlDomainPublisher extends Publisher implements DomainPublisher {
 
     protected void appendTraceDetails(StringBuilder sb, Trace trace) {
         trace.getCalls().forEach(c -> {
-            sb.append(c.getDepth() == 0? "" : StringUtils.repeat(TAB, c.getDepth() - 1) + "|--")
+            sb.append(c.getDepth() == 0? "" : StringUtils.repeat(EMPTY_TAB, c.getDepth() - 1) + FILLED_TAB)
                     .append(c.getMethod().getName())
                     .append(" (" + classLink(c.getMethod().getClassX(), c.getMethod().getClassX().getName(), "../") + ")")
                     .append(BR);
