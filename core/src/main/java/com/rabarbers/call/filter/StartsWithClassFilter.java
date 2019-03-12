@@ -11,6 +11,6 @@ public class StartsWithClassFilter extends ClassFilter {
 
     @Override
     public boolean match(ClassX classX) {
-        return classX.getPackageX().startsWith(start);
+        return classX.getFullName().startsWith(start);
     }
 }

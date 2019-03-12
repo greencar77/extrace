@@ -31,6 +31,9 @@ public class SuiteManager {
                 .filter(c -> c != null)
                 .map(call -> {
                     ClassX classX = registerClass(domainClasses, result, call);
+                    if (suite.getForbiddenClasses().contains(classX.getFullName())) {
+                        throw new RuntimeException("Forbidden class: " + classX.getFullName() + " trace: " + result.getName());
+                    }
                     MethodX methodX = registerMethod(domainMethods, result, classX, call);
                     return new Call(call.getDepth(), methodX);
                 })
