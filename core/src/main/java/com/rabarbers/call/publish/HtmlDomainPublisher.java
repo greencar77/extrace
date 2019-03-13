@@ -4,6 +4,8 @@ import com.rabarbers.call.domain.ClassX;
 import com.rabarbers.call.domain.Domain;
 import com.rabarbers.call.domain.MethodX;
 import com.rabarbers.call.domain.Trace;
+import com.rabarbers.call.domain.call.Call;
+import com.rabarbers.call.domain.call.StubCall;
 import com.rabarbers.call.filter.ClassFilter;
 import com.rabarbers.call.filter.FilterListBuilder;
 import com.rabarbers.call.html.HtmlPage;
@@ -170,20 +172,22 @@ public class HtmlDomainPublisher extends Publisher implements DomainPublisher {
         writeFileWrapper("html/traces/" + trace.getName() + ".html", root);
     }
 
-//    protected void appendTraceDetails(StringBuilder sb, Trace trace) {
-//        trace.getCalls().forEach(c -> {
-//            sb.append(StringUtils.repeat(TAB, c.getDepth()))
-//                    .append(c.getMethod().getMethodLocalId())
-//                    .append(BR);
-//        });
-//    }
-
     protected void appendTraceDetails(StringBuilder sb, Trace trace) {
         trace.getCalls().forEach(c -> {
-            sb.append(c.getDepth() == 0? "" : StringUtils.repeat(EMPTY_TAB, c.getDepth() - 1) + FILLED_TAB)
-                    .append(c.getMethod().getName())
-                    .append(" (" + classLink(c.getMethod().getClassX(), c.getMethod().getClassX().getName(), "../") + ")")
-                    .append(BR);
+            if (c instanceof Call) {
+                Call call = (Call) c;
+                sb.append(c.getDepth() == 0? "" : StringUtils.repeat(EMPTY_TAB, c.getDepth() - 1) + FILLED_TAB)
+                        .append(call.getMethod().getName())
+                        .append(" (" + classLink(call.getMethod().getClassX(), call.getMethod().getClassX().getName(), "../") + ")")
+                        .append(BR);
+            } else if (c instanceof StubCall) {
+                StubCall stubCall = (StubCall) c;
+                sb.append(c.getDepth() == 0? "" : StringUtils.repeat(EMPTY_TAB, c.getDepth() - 1) + FILLED_TAB)
+                        .append(stubCall.getContent())
+                        .append(BR);
+            } else {
+                throw new RuntimeException(c.getClass().getCanonicalName());
+            }
         });
     }
 }

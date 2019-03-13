@@ -1,21 +1,20 @@
-package com.rabarbers.call.domain;
+package com.rabarbers.call.domain.row;
 
 import java.util.Objects;
 
 
-public class CallRow {
-    private int depth;
+public class MethodRow extends Row {
     private String packageName;
     private String className;
     private String methodName;
     private String signatureX;
 
-    public CallRow(int depth, String packageName, String className, String methodName, String signatureX) {
+    public MethodRow(int depth, String packageName, String className, String methodName, String signatureX) {
         this(packageName, className, methodName, signatureX);
-        this.depth = depth;
+        this.setDepth(depth);
     }
 
-    public CallRow(String packageName, String className, String methodName, String signatureX) {
+    public MethodRow(String packageName, String className, String methodName, String signatureX) {
         this.packageName = packageName;
         this.className = className;
         this.methodName = methodName;
@@ -70,37 +69,27 @@ public class CallRow {
         return methodName + " " + "(" + className + ")";
     }
 
-    public int getDepth() {
-        return depth;
-    }
-
-    public void setDepth(int depth) {
-        this.depth = depth;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        CallRow callRow = (CallRow) o;
-        return depth == callRow.depth &&
-                Objects.equals(packageName, callRow.packageName) &&
-                Objects.equals(className, callRow.className) &&
-                Objects.equals(methodName, callRow.methodName) &&
-                Objects.equals(signatureX, callRow.signatureX);
+        MethodRow methodRow = (MethodRow) o;
+        return Objects.equals(packageName, methodRow.packageName) &&
+                Objects.equals(className, methodRow.className) &&
+                Objects.equals(methodName, methodRow.methodName) &&
+                Objects.equals(signatureX, methodRow.signatureX);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(depth, packageName, className, methodName, signatureX);
+        return Objects.hash(packageName, className, methodName, signatureX);
     }
 
     @Override
     public String toString() {
-        return "CallRow{" +
-                "depth=" + depth +
-                ", packageName='" + packageName + '\'' +
+        return "MethodRow{" +
+                "packageName='" + packageName + '\'' +
                 ", className='" + className + '\'' +
                 ", methodName='" + methodName + '\'' +
                 ", signatureX='" + signatureX + '\'' +

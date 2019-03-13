@@ -1,12 +1,16 @@
 package com.rabarbers.call.domain;
 
+import com.rabarbers.call.domain.call.Call;
+import com.rabarbers.call.domain.call.Statement;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 public class Trace implements Comparable<Trace> {
     private String name;
-    private List<Call> calls;
+    private List<Statement> calls;
+    private Statement rootStatement;
     private Set<ClassX> classes = new HashSet<>();
     private Set<MethodX> methods = new HashSet<>();
 
@@ -14,7 +18,7 @@ public class Trace implements Comparable<Trace> {
         this.name = name;
     }
 
-    public Trace(String name, List<Call> calls) {
+    public Trace(String name, List<Statement> calls) {
         this.name = name;
         this.calls = calls;
     }
@@ -23,7 +27,7 @@ public class Trace implements Comparable<Trace> {
         return name;
     }
 
-    public List<Call> getCalls() {
+    public List<Statement> getCalls() {
         return calls;
     }
 
@@ -35,12 +39,20 @@ public class Trace implements Comparable<Trace> {
         return methods;
     }
 
-    public void setCalls(List<Call> calls) {
+    public void setCalls(List<Statement> calls) {
         this.calls = calls;
     }
 
     @Override
     public int compareTo(Trace o) {
         return this.name.compareTo(o.getName());
+    }
+
+    public Statement getRootStatement() {
+        return rootStatement;
+    }
+
+    public void setRootStatement(Statement rootStatement) {
+        this.rootStatement = rootStatement;
     }
 }

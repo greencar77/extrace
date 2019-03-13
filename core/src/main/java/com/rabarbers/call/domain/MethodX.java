@@ -1,5 +1,7 @@
 package com.rabarbers.call.domain;
 
+import com.rabarbers.call.domain.row.MethodRow;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -9,9 +11,9 @@ public class MethodX implements Comparable<MethodX> {
     private Set<Trace> traces = new HashSet<>();
     private ClassX classX;
 
-    public MethodX(CallRow callRow) {
-        this.name = callRow.getMethodName();
-        this.signatureX = callRow.getSignatureX();
+    public MethodX(MethodRow methodRow) {
+        this.name = methodRow.getMethodName();
+        this.signatureX = methodRow.getSignatureX();
     }
 
     public String getName() {
@@ -45,5 +47,15 @@ public class MethodX implements Comparable<MethodX> {
 
     public void setTraces(Set<Trace> traces) {
         this.traces = traces;
+    }
+
+    @Override
+    public String toString() {
+        return "MethodX{" +
+                "name='" + name + '\'' +
+                ", signatureX='" + signatureX + '\'' +
+                ", traces=" + traces +
+                ", classX=" + classX +
+                '}';
     }
 }

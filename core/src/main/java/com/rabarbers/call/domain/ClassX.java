@@ -1,5 +1,7 @@
 package com.rabarbers.call.domain;
 
+import com.rabarbers.call.domain.row.MethodRow;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -11,8 +13,8 @@ public class ClassX implements Comparable<ClassX> {
     private Map<String, MethodX> methods = new HashMap<>();
     private Set<Trace> traces = new HashSet<>();
 
-    public ClassX(CallRow callRow) {
-        this(callRow.getPackageName(), callRow.getClassName());
+    public ClassX(MethodRow methodRow) {
+        this(methodRow.getPackageName(), methodRow.getClassName());
     }
 
     public ClassX(String packageX, String name) {

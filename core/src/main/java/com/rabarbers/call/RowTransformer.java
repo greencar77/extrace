@@ -1,7 +1,8 @@
 package com.rabarbers.call;
 
-import com.rabarbers.call.domain.CallRow;
-import org.apache.commons.io.FileUtils;
+import com.rabarbers.call.domain.row.MethodRow;
+import com.rabarbers.call.domain.row.TextRow;
+import com.rabarbers.call.domain.row.Row;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.BufferedReader;
@@ -11,14 +12,13 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class CallTransformer {
+public class RowTransformer {
     public static final int TAB_SIZE = 2;
 
     private static final Pattern PATTERN = Pattern.compile("^(\\s*)(.*)");
@@ -27,7 +27,7 @@ public class CallTransformer {
     public static final String COMMENT_MARK = "//";
     public static final String INTELLIJ_METHOD_SEPARATOR = "#";
 
-    public static CallRow convertToCallTrimmed(String statement, Map<String, String> aliases) {
+    static Row convertToCallTrimmed(String statement, Map<String, String> aliases, int depth) {
         if (statement == null || statement.trim().length() == 0) {
             return null;
         } else {
@@ -39,7 +39,9 @@ public class CallTransformer {
         }
 
         if (UNKNOWN.equals(statement.trim()) || UNKNOWN_EXCEL.equals(statement.trim()) || statement.trim().startsWith(COMMENT_MARK)) {
-            return null;
+            Row result = new TextRow(statement.trim());
+            result.setDepth(depth);
+            return result;
         }
 
         statement = normalizeStatement(statement, aliases);
@@ -50,7 +52,7 @@ public class CallTransformer {
         String method = packageToMethod.substring(packageAndClass.length() + 1);
         String signature = statement.substring(statement.indexOf("("));
 
-        return new CallRow(packageAndClass.substring(0, packageAndClass.lastIndexOf(".")),
+        return new MethodRow(packageAndClass.substring(0, packageAndClass.lastIndexOf(".")),
                 packageAndClass.substring(packageAndClass.lastIndexOf(".") + 1),
                 method, signature);
     }
@@ -82,15 +84,11 @@ public class CallTransformer {
         return statement.contains("#");
     }
 
-    public static CallRow convertToCallWithWhitespace(String statement, Map<String, String> aliases) {
+    public static Row convertToCallWithWhitespace(String statement, Map<String, String> aliases) {
         if (statement == null || statement.trim().length() == 0) {
             return null;
         } else {
             statement = StringUtils.stripEnd(statement, null);
-        }
-
-        if (UNKNOWN.equals(statement.trim()) || UNKNOWN_EXCEL.equals(statement.trim()) || statement.trim().startsWith(COMMENT_MARK)) {
-            return null;
         }
 
         String indent = null;
@@ -101,29 +99,44 @@ public class CallTransformer {
             }
         }
 
-        CallRow result = convertToCallTrimmed(statement.trim(), aliases);
+        if (UNKNOWN.equals(statement.trim()) || UNKNOWN_EXCEL.equals(statement.trim()) || statement.trim().startsWith(COMMENT_MARK)) {
+            Row result = new TextRow(statement.trim());
+            result.setDepth(getDepth(indent));
+            return result;
+        }
+
+        Row result = convertToCallTrimmed(statement.trim(), aliases, getDepth(indent));
         if (result != null && indent != null) {
-            int depth = 0;
-            if (indent.startsWith("\t")) {
-                depth = indent.length();
-                if (indent.contains(" ")) {
-                    throw new RuntimeException("Mixed indent: [" + indent + "]");
-                }
-            } else if (indent.startsWith(" ")) {
-                if (indent.length() % TAB_SIZE != 0) {
-                    throw new RuntimeException("Invalid indent length: [" + indent + "]" + " " + indent.length());
-                } else {
-                    depth = indent.length() / TAB_SIZE;
-                }
-            } else {
-                throw new RuntimeException("Invalid indent: [" + indent + "]");
-            }
-            result.setDepth(depth);
+            result.setDepth(getDepth(indent));
         }
         return result;
     }
 
-    public static List<CallRow> convertToList(File file, Map<String, String> aliases) {
+    private static int getDepth(String indent) {
+        if (indent == null) {
+            return 0;
+        }
+
+        int depth = 0;
+        if (indent.startsWith("\t")) {
+            depth = indent.length();
+            if (indent.contains(" ")) {
+                throw new RuntimeException("Mixed indent: [" + indent + "]");
+            }
+        } else if (indent.startsWith(" ")) {
+            if (indent.length() % TAB_SIZE != 0) {
+                throw new RuntimeException("Invalid indent length: [" + indent + "]" + " " + indent.length());
+            } else {
+                depth = indent.length() / TAB_SIZE;
+            }
+        } else {
+            throw new RuntimeException("Invalid indent: [" + indent + "]");
+        }
+
+        return depth;
+    }
+
+    public static List<Row> convertToList(File file, Map<String, String> aliases) {
         try {
             return convertToList(new FileInputStream(file), aliases);
         } catch (FileNotFoundException e) {
@@ -131,29 +144,8 @@ public class CallTransformer {
         }
     }
 
-    public static File convertToFile(String sourcePath, String destinationPath, Map<String, String> aliases) {
-        return convertToFile(new File(sourcePath), destinationPath, aliases);
-    }
-
-    public static File convertToFile(File sourceFile, String destinationPath, Map<String, String> aliases) {
-        StringBuilder sb = new StringBuilder();
-        convertToList(sourceFile, aliases).stream()
-                .filter(call -> call != null)
-                .forEach(call -> {
-                    sb.append(depthToIndent(call.getDepth()) + call.shortVersion()).append("\r\n");
-                });
-
-        File result = new File(destinationPath);
-        try {
-            FileUtils.writeByteArrayToFile(result, sb.toString().getBytes(Charset.forName("UTF8")));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return result;
-    }
-
-    public static List<CallRow> convertToList(InputStream is, Map<String, String> aliases) {
-        List<CallRow> result = new ArrayList<>();
+    public static List<Row> convertToList(InputStream is, Map<String, String> aliases) {
+        List<Row> result = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
             String line;
             while ((line = br.readLine()) != null) {

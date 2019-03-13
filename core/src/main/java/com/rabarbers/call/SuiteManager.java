@@ -1,7 +1,11 @@
 package com.rabarbers.call;
 
-import com.rabarbers.call.domain.Call;
-import com.rabarbers.call.domain.CallRow;
+import com.rabarbers.call.domain.call.Call;
+import com.rabarbers.call.domain.call.Statement;
+import com.rabarbers.call.domain.call.StubCall;
+import com.rabarbers.call.domain.row.MethodRow;
+import com.rabarbers.call.domain.row.TextRow;
+import com.rabarbers.call.domain.row.Row;
 import com.rabarbers.call.domain.ClassX;
 import com.rabarbers.call.domain.MethodX;
 import com.rabarbers.call.domain.Suite;
@@ -13,37 +17,51 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.rabarbers.call.publish.Publisher.DATA_FOLDER;
+
 public class SuiteManager {
+
+    private GraphManager graphManager = new GraphManager();
 
     public void appendTrace(Suite suite, File file) {
         System.out.println("Append trace: " + file.getAbsoluteFile());
-        List<CallRow> callRows = CallTransformer.convertToList(file, suite.getAliases());
-        suite.getDomain().getTraces().add(createTrace(suite, file.getName(), callRows));
+        List<Row> rows = RowTransformer.convertToList(file, suite.getAliases());
+        suite.getDomain().getTraces().add(createTrace(suite, file.getName(), rows));
     }
 
-    private Trace createTrace(Suite suite, String name, List<CallRow> callRows) {
+    private Trace createTrace(Suite suite, String name, List<Row> callRows) {
         Map<String, ClassX> domainClasses = suite.getDomain().getClasses();
         Map<String, MethodX> domainMethods = suite.getDomain().getMethods();
 
         Trace result = new Trace(name.substring(0, name.lastIndexOf(".")));
 
-        List<Call> calls = callRows.stream()
+        List<Statement> calls = callRows.stream()
                 .filter(c -> c != null)
                 .map(call -> {
-                    ClassX classX = registerClass(domainClasses, result, call);
-                    if (suite.getForbiddenClasses().contains(classX.getFullName())) {
-                        throw new RuntimeException("Forbidden class: " + classX.getFullName() + " trace: " + result.getName());
+                    if (call instanceof MethodRow) {
+                        MethodRow methodRow = (MethodRow) call;
+                        ClassX classX = registerClass(domainClasses, result, methodRow);
+                        if (suite.getForbiddenClasses().contains(classX.getFullName())) {
+                            throw new RuntimeException("Forbidden class: " + classX.getFullName() + " trace: " + result.getName());
+                        }
+                        MethodX methodX = registerMethod(domainMethods, result, classX, methodRow);
+                        return new Call(call.getDepth(), methodX);
+                    } else if (call instanceof TextRow) {
+                        return new StubCall(call.getDepth(), ((TextRow) call).getContent());
+                    } else {
+                        throw new RuntimeException(call.getClass().getCanonicalName());
                     }
-                    MethodX methodX = registerMethod(domainMethods, result, classX, call);
-                    return new Call(call.getDepth(), methodX);
                 })
                 .collect(Collectors.toList());
 
         result.setCalls(calls);
+
+        graphManager.extractCallGraph(result);
+
         return result;
     }
 
-    private ClassX registerClass(Map<String, ClassX> domainClasses, Trace trace, CallRow call) {
+    private ClassX registerClass(Map<String, ClassX> domainClasses, Trace trace, MethodRow call) {
         ClassX resultClass;
         if (!domainClasses.containsKey(call.getClassFullName())) {
             resultClass = new ClassX(call);
@@ -56,7 +74,7 @@ public class SuiteManager {
         return resultClass;
     }
 
-    private MethodX registerMethod(Map<String, MethodX> domainMethods, Trace trace, ClassX classX, CallRow call) {
+    private MethodX registerMethod(Map<String, MethodX> domainMethods, Trace trace, ClassX classX, MethodRow call) {
         MethodX resultMethod;
         if (!domainMethods.containsKey(call.getMethodGlobalId())) {
             resultMethod = new MethodX(call);
@@ -76,7 +94,7 @@ public class SuiteManager {
     }
 
     public void appendTraceFromFolder(Suite suite, String folderPath) {
-        appendTraceFromFolder(suite, new File(folderPath));
+        appendTraceFromFolder(suite, new File(DATA_FOLDER + folderPath));
     }
 
     public void appendTraceFromFolder(Suite suite, File file) {
