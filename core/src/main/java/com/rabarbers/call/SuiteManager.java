@@ -56,7 +56,7 @@ public class SuiteManager {
 
         result.setCalls(calls);
 
-        graphManager.extractCallGraph(result);
+        graphManager.extractCallTree(result);
 
         return result;
     }
