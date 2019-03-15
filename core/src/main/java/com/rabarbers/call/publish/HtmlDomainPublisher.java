@@ -179,6 +179,7 @@ public class HtmlDomainPublisher extends Publisher implements DomainPublisher {
                 sb.append(c.getDepth() == 0? "" : StringUtils.repeat(EMPTY_TAB, c.getDepth() - 1) + FILLED_TAB)
                         .append(call.getMethod().getName())
                         .append(" (" + classLink(call.getMethod().getClassX(), call.getMethod().getClassX().getName(), "../") + ")")
+                        .append(call.getMethod().getTraces().size() > 1? " [" + call.getMethod().getTraces().size() + "]": "")
                         .append(BR);
             } else if (c instanceof StubCall) {
                 StubCall stubCall = (StubCall) c;
