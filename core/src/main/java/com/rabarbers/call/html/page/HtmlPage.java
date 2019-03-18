@@ -1,4 +1,9 @@
-package com.rabarbers.call.html;
+package com.rabarbers.call.html.page;
+
+import com.rabarbers.call.html.Body;
+import com.rabarbers.call.html.Head;
+import com.rabarbers.call.html.Html;
+import com.rabarbers.call.html.Title;
 
 import java.util.ArrayList;
 

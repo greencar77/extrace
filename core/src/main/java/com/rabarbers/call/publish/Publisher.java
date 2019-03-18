@@ -1,6 +1,6 @@
 package com.rabarbers.call.publish;
 
-import com.rabarbers.call.html.Node;
+import com.rabarbers.call.html.Element;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -21,11 +21,11 @@ public class Publisher {
         }
     }
 
-    protected void writeFileWrapper(String path, Node node) {
+    protected void writeFileWrapper(String path, Element element) {
         try {
             File file = new File(OUTPUT_FOLDER + path);
             System.out.println("Output file: " + file.getAbsolutePath());
-            FileUtils.writeByteArrayToFile(file, node.getContent().toString().getBytes(Charset.forName("UTF-8")));
+            FileUtils.writeByteArrayToFile(file, element.getContent().toString().getBytes(Charset.forName("UTF-8")));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

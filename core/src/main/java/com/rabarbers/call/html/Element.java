@@ -1,14 +1,18 @@
 package com.rabarbers.call.html;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
-public abstract class Node {
+public abstract class Element {
     private String name;
     protected StringBuilder childContent = new StringBuilder();
-    protected List<Node> children = new ArrayList<>();
+    protected List<Element> children = new ArrayList<>();
+    private Map<String, String> attributes = new HashMap<>();
 
-    public Node(String name) {
+    public Element(String name) {
         this.name = name;
     }
 
@@ -28,17 +32,17 @@ public abstract class Node {
         this.childContent.append(childContent);
     }
 
-    public List<Node> getChildren() {
+    public List<Element> getChildren() {
         return children;
     }
 
-    public void appendChild(Node child) {
+    public void appendChild(Element child) {
         this.children.add(child);
     }
 
     public StringBuilder getContent() {
         StringBuilder sb = new StringBuilder();
-        sb.append("<" + name + ">").append("\n");
+        sb.append("<" + name + getSerializedAttributes() + ">").append("\n");
         if (childContent.length() > 0 && children.size() > 0) {
             throw new RuntimeException("Only one content type allowed " + name);
         }
@@ -49,5 +53,23 @@ public abstract class Node {
         }
         sb.append("</" + name + ">").append("\n");
         return sb;
+    }
+
+    private String getSerializedAttributes() {
+        if (attributes.size() > 0) {
+            return " " + attributes.entrySet().stream()
+                    .map(es -> es.getKey() + "=" + "\"" + es.getValue() + "\"")
+                    .collect(Collectors.joining(" "));
+        } else {
+            return "";
+        }
+    }
+
+    public void setAttr(String key, String value) {
+        attributes.put(key, value);
+    }
+
+    public Map<String, String> getAttributes() {
+        return attributes;
     }
 }

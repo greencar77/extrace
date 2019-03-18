@@ -1,9 +1,7 @@
 package com.rabarbers.call.publish;
 
 import com.rabarbers.call.domain.Trace;
-import com.rabarbers.call.domain.call.Call;
-import com.rabarbers.call.domain.call.StubCall;
-import com.rabarbers.call.html.HtmlPage;
+import com.rabarbers.call.html.page.HtmlPage;
 import org.apache.commons.lang3.StringUtils;
 
 public abstract class TracePublisher extends HtmlPublisher {

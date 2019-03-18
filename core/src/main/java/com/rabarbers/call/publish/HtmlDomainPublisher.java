@@ -6,7 +6,7 @@ import com.rabarbers.call.domain.MethodX;
 import com.rabarbers.call.domain.Trace;
 import com.rabarbers.call.filter.ClassFilter;
 import com.rabarbers.call.filter.FilterListBuilder;
-import com.rabarbers.call.html.HtmlPage;
+import com.rabarbers.call.html.page.HtmlPage;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Collection;

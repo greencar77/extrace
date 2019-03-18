@@ -1,6 +1,6 @@
 package com.rabarbers.call.html;
 
-public class Title extends Node {
+public class Title extends Element {
 
     public Title() {
         super("title");

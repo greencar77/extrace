@@ -40,7 +40,7 @@ public class GraphManager {
     }
     
     private void reindex(Trace trace) {
-        reindex(trace.getRootStatement(), "s", 0);
+        reindex(trace.getRootStatement(), "", 0);
     }
     
     private void reindex(Statement statement, String prefix, int siblingIndex) {
