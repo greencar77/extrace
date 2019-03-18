@@ -5,6 +5,7 @@ import java.util.List;
 
 public abstract class Statement {
     private int depth;
+    private String treeIndex;
 
     private Statement parent;
     private List<Statement> children = new ArrayList<>();
@@ -30,5 +31,13 @@ public abstract class Statement {
 
     public void setParent(Statement parent) {
         this.parent = parent;
+    }
+
+    public String getTreeIndex() {
+        return treeIndex;
+    }
+
+    public void setTreeIndex(String treeIndex) {
+        this.treeIndex = treeIndex;
     }
 }

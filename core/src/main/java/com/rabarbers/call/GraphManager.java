@@ -2,6 +2,7 @@ package com.rabarbers.call;
 
 import com.rabarbers.call.domain.Suite;
 import com.rabarbers.call.domain.Trace;
+import com.rabarbers.call.domain.call.Call;
 import com.rabarbers.call.domain.call.Statement;
 import com.rabarbers.call.domain.call.StubCall;
 
@@ -34,6 +35,20 @@ public class GraphManager {
             stack.push(c);
             bind(ancestor, c);
         });
+        
+        reindex(trace);
+    }
+    
+    private void reindex(Trace trace) {
+        reindex(trace.getRootStatement(), "s", 0);
+    }
+    
+    private void reindex(Statement statement, String prefix, int siblingIndex) {
+        String index = prefix + "_" + siblingIndex;
+        statement.setTreeIndex(index);
+        for (int i = 0; i < statement.getChildren().size(); i++) {
+            reindex(statement.getChildren().get(i), index, i);
+        }
     }
 
     private void bind(Statement parent, Statement child) {

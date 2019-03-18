@@ -4,8 +4,6 @@ import com.rabarbers.call.domain.ClassX;
 import com.rabarbers.call.domain.Domain;
 import com.rabarbers.call.domain.MethodX;
 import com.rabarbers.call.domain.Trace;
-import com.rabarbers.call.domain.call.Call;
-import com.rabarbers.call.domain.call.StubCall;
 import com.rabarbers.call.filter.ClassFilter;
 import com.rabarbers.call.filter.FilterListBuilder;
 import com.rabarbers.call.html.HtmlPage;
@@ -17,12 +15,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class HtmlDomainPublisher extends Publisher implements DomainPublisher {
+public class HtmlDomainPublisher extends HtmlPublisher implements DomainPublisher {
 
-    public static final String BR = "<br/>\n";
-    public static final int TAB_SIZE = 4;
-    public static final String EMPTY_TAB = "|" + StringUtils.repeat("&nbsp;", TAB_SIZE);
-    public static final String FILLED_TAB = "|" + StringUtils.repeat("-", TAB_SIZE);
+    private TracePublisher tracePublisher = new DynamicTracePublisher();
 
     public void publishDomainClasses(Domain domain, String path, ClassFilter classFilter) {
         HtmlPage root = new HtmlPage("Classes");
@@ -45,13 +40,6 @@ public class HtmlDomainPublisher extends Publisher implements DomainPublisher {
 
         root.getBody().appendChildContent(sb);
         writeFileWrapper(path, root);
-    }
-
-    private String classLink(ClassX classX, String caption, String backtrack) {
-        return "<a href=\""
-                + (backtrack == null? "": backtrack)
-                + "classes/"
-                + toPath(classX.getPackageX()) + "/" + classX.getName() + ".html" + "\">" + caption + "</a>";
     }
 
     private void output(StringBuilder sb, Collection<ClassX> classes) {
@@ -159,36 +147,6 @@ public class HtmlDomainPublisher extends Publisher implements DomainPublisher {
     @Override
     public void publishTraceDetails(Domain domain, String path) {
         domain.getTraces().stream()
-                .forEach(t -> publish(t));
-    }
-
-    private void publish(Trace trace) {
-        HtmlPage root = new HtmlPage("T: " + trace.getName());
-
-        StringBuilder sb = new StringBuilder();
-        appendTraceDetails(sb, trace);
-
-        root.getBody().appendChildContent(sb);
-        writeFileWrapper("html/traces/" + trace.getName() + ".html", root);
-    }
-
-    protected void appendTraceDetails(StringBuilder sb, Trace trace) {
-        trace.getCalls().forEach(c -> {
-            if (c instanceof Call) {
-                Call call = (Call) c;
-                sb.append(c.getDepth() == 0? "" : StringUtils.repeat(EMPTY_TAB, c.getDepth() - 1) + FILLED_TAB)
-                        .append(call.getMethod().getName())
-                        .append(" (" + classLink(call.getMethod().getClassX(), call.getMethod().getClassX().getName(), "../") + ")")
-                        .append(call.getMethod().getTraces().size() > 1? " [" + call.getMethod().getTraces().size() + "]": "")
-                        .append(BR);
-            } else if (c instanceof StubCall) {
-                StubCall stubCall = (StubCall) c;
-                sb.append(c.getDepth() == 0? "" : StringUtils.repeat(EMPTY_TAB, c.getDepth() - 1) + FILLED_TAB)
-                        .append(stubCall.getContent())
-                        .append(BR);
-            } else {
-                throw new RuntimeException(c.getClass().getCanonicalName());
-            }
-        });
+                .forEach(t -> tracePublisher.publish(t));
     }
 }
