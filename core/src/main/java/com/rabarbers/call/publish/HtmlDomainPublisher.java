@@ -39,7 +39,7 @@ public class HtmlDomainPublisher extends HtmlPublisher implements DomainPublishe
         }
 
         root.getBody().appendChildContent(sb);
-        writeFileWrapper(path, root);
+        writeFileWrapper(getPublisherFolder() + path, root);
     }
 
     private void output(StringBuilder sb, Collection<ClassX> classes) {
@@ -72,7 +72,7 @@ public class HtmlDomainPublisher extends HtmlPublisher implements DomainPublishe
         output(sb, remainingClasses);
 
         root.getBody().appendChildContent(sb);
-        writeFileWrapper(path, root);
+        writeFileWrapper(getPublisherFolder() + path, root);
     }
 
     public void publishDomainClassDetails(Domain domain, ClassFilter classFilter) {
@@ -93,7 +93,7 @@ public class HtmlDomainPublisher extends HtmlPublisher implements DomainPublishe
         appendClassDetails(sb, classX);
 
         root.getBody().appendChildContent(sb);
-        writeFileWrapper("html/classes/" + toPath(classX.getPackageX()) + "/" + classX.getName() + ".html", root);
+        writeFileWrapper(getPublisherFolder() + "classes/" + toPath(classX.getPackageX()) + "/" + classX.getName() + ".html", root);
     }
 
     protected void appendClassDetails(StringBuilder sb, ClassX classX) {

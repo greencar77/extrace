@@ -6,14 +6,26 @@ import com.rabarbers.call.domain.call.Statement;
 import com.rabarbers.call.domain.call.StubCall;
 import com.rabarbers.call.html.Script;
 import com.rabarbers.call.html.page.HtmlPage;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+
+import java.io.File;
+import java.io.IOException;
 
 public class DynamicTracePublisher extends TracePublisher {
 
+    private static final String SCRIPT_FOLDER = "common/";
+
     protected void appendScripts(HtmlPage root) {
         Script script = new Script();
-        script.setAttr("src", "../common/trace.js");
+        script.setAttr("src", "../" + SCRIPT_FOLDER + "trace.js");
         root.getHead().appendChild(script);
+
+        try {
+            FileUtils.copyInputStreamToFile(this.getClass().getClassLoader().getResourceAsStream("trace.js"), new File(OUTPUT_FOLDER + getPublisherFolder() + SCRIPT_FOLDER + "trace.js"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

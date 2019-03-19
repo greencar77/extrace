@@ -17,7 +17,7 @@ public abstract class TracePublisher extends HtmlPublisher {
         appendTraceDetails(sb, trace);
 
         root.getBody().appendChildContent(sb);
-        writeFileWrapper("html/traces/" + trace.getName() + ".html", root);
+        writeFileWrapper(getPublisherFolder() + "traces/" + trace.getName() + ".html", root);
     }
 
     protected void appendScripts(HtmlPage root) {

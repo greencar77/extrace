@@ -14,7 +14,7 @@ public class StatisticsPublisher extends Publisher {
     public void publish(Suite suite, String path) {
         StringBuilder sb = new StringBuilder();
         sb.append("Traces: " + suite.getDomain().getTraces().size()).append("\n");
-        writeFileWrapper(path, sb);
+        writeFileWrapper(getPublisherFolder() + path, sb);
     }
 
     public void publishDomain(Domain domain, String path) {
@@ -26,7 +26,7 @@ public class StatisticsPublisher extends Publisher {
                 .sum();
         sb.append("Methods: " + methodCount).append("\n");
         sb.append("Traces: " + domain.getTraces().size()).append("\n");
-        writeFileWrapper(path, sb);
+        writeFileWrapper(getPublisherFolder() + path, sb);
     }
 
     public void publishDomain(Domain domain, String path, AbstractCategoryByClass category) {
@@ -44,6 +44,11 @@ public class StatisticsPublisher extends Publisher {
                     sb.append("/" + methodCount);
                     sb.append("\n");
                 });
-        writeFileWrapper(path, sb);
+        writeFileWrapper(getPublisherFolder() + path, sb);
+    }
+
+    @Override
+    protected String getPublisherFolder() {
+        return "txt/";
     }
 }

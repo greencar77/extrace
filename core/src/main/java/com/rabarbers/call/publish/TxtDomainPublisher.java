@@ -16,7 +16,7 @@ public class TxtDomainPublisher extends Publisher implements DomainPublisher {
         domain.getClasses().values().stream()
                 .sorted()
                 .forEach(c -> sb.append(c.getFullName()).append("\n"));
-        writeFileWrapper(path, sb);
+        writeFileWrapper(getPublisherFolder()+ path, sb);
     }
 
     public void publishDomainClassesWithMethods(Domain domain, String path) {
@@ -31,7 +31,7 @@ public class TxtDomainPublisher extends Publisher implements DomainPublisher {
                                     .forEach(m -> sb.append("    " + m.getMethodLocalId()).append("\n"));
                         }
                 );
-        writeFileWrapper(path, sb);
+        writeFileWrapper(getPublisherFolder() + path, sb);
     }
 
     public void publishDomainClassesWithMethods(Domain domain, String path, ClassFilter classFilter) {
@@ -47,7 +47,7 @@ public class TxtDomainPublisher extends Publisher implements DomainPublisher {
                                     .forEach(m -> sb.append("    " + m.getMethodLocalId()).append(" (" + m.getTraces().size() + ")").append("\n"));
                         }
                 );
-        writeFileWrapper(path, sb);
+        writeFileWrapper(getPublisherFolder() + path, sb);
     }
 
     protected void appendClassDetails(StringBuilder sb, ClassX classX) {
@@ -97,11 +97,16 @@ public class TxtDomainPublisher extends Publisher implements DomainPublisher {
     private void publish(ClassX classX) {
         StringBuilder sb = new StringBuilder();
         appendClassDetails(sb, classX);
-        writeFileWrapper("classes/" + toPath(classX.getPackageX()) + "/" + classX.getName() + ".txt", sb);
+        writeFileWrapper(getPublisherFolder() + "classes/" + toPath(classX.getPackageX()) + "/" + classX.getName() + ".txt", sb);
     }
 
     @Override
     public void publishTraceDetails(Domain domain, String path) {
         throw new RuntimeException("Not implemented"); //TODO
+    }
+
+    @Override
+    protected String getPublisherFolder() {
+        return "txt/";
     }
 }

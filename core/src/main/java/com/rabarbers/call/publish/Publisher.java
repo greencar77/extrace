@@ -7,7 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 
-public class Publisher {
+public abstract class Publisher {
     public static final String DATA_FOLDER = "data/";
     public static final String OUTPUT_FOLDER = DATA_FOLDER + "output/";
 
@@ -34,4 +34,6 @@ public class Publisher {
     protected static final String toPath(String packageX) {
         return packageX.replaceAll("\\.", "/");
     }
+
+    protected abstract String getPublisherFolder();
 }
