@@ -11,12 +11,16 @@ public abstract class TracePublisher extends HtmlPublisher {
 
     public void publish(Trace trace) {
         HtmlPage root = new HtmlPage("T: " + trace.getName());
+        appendScripts(root);
 
         StringBuilder sb = new StringBuilder();
         appendTraceDetails(sb, trace);
 
         root.getBody().appendChildContent(sb);
         writeFileWrapper("html/traces/" + trace.getName() + ".html", root);
+    }
+
+    protected void appendScripts(HtmlPage root) {
     }
 
     protected abstract void appendTraceDetails(StringBuilder sb, Trace trace);

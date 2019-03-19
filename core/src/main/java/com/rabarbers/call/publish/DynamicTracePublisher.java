@@ -10,22 +10,14 @@ import org.apache.commons.lang3.StringUtils;
 
 public class DynamicTracePublisher extends TracePublisher {
 
-    public void publish(Trace trace) {
-        HtmlPage root = new HtmlPage("T: " + trace.getName());
+    protected void appendScripts(HtmlPage root) {
         Script script = new Script();
         script.setAttr("src", "../common/trace.js");
         root.getHead().appendChild(script);
-
-        StringBuilder sb = new StringBuilder();
-        appendTraceDetails(sb, trace);
-
-        root.getBody().appendChildContent(sb);
-        writeFileWrapper("html/traces/" + trace.getName() + ".html", root);
     }
 
     @Override
     protected void appendTraceDetails(StringBuilder sb, Trace trace) {
-        //TODO
         trace.getCalls().forEach(c -> {
             sb.append("<span id=\"" + "s" + c.getTreeIndex() + "\">");
             if (c instanceof Call) {
@@ -41,21 +33,32 @@ public class DynamicTracePublisher extends TracePublisher {
             } else {
                 throw new RuntimeException(c.getClass().getCanonicalName());
             }
-            sb.append(createCollapse(c))
-                    .append("</span>")
-                    .append(BR);
+            sb.append(createCollapseExpand(c))
+                    .append(BR)
+                    .append("</span>");
         });
     }
 
-    private StringBuilder createCollapse(Statement statement) {
+    private StringBuilder createCollapseExpand(Statement statement) {
+        //<span id="sb_0_1_1_5_0_0" onclick="hide('s_0_1_1_5_0_0')">[-]</span>
+        if (statement.getChildren().isEmpty()) {
+            return new StringBuilder();
+        }
+
         StringBuilder sb = new StringBuilder();
-        //<span onclick="expand('1')" id="a_1">[+]</span>
+        sb.append(" " + "<span"
+                + " id=\"" + "col_s" + statement.getTreeIndex() + "\""
+                + " onclick=\"" + "collapse('" + "s" + statement.getTreeIndex() + "')\""
+                + ">");
+        sb.append("(-)");
+        sb.append("</span>");
 
         sb.append(" " + "<span"
-                + " id=\"" + "sb" + statement.getTreeIndex() + "\""
-                + " onclick=\"" + "hide('" + "s" + statement.getTreeIndex() + "')" + "\">");
-
-        sb.append("[-]");
+                + " id=\"" + "ex_s" + statement.getTreeIndex() + "\""
+                + " onclick=\"" + "expand('" + "s" + statement.getTreeIndex() + "')\""
+                + " style=\"display: none;\""
+                + ">");
+        sb.append("(+)");
         sb.append("</span>");
 
         return sb;

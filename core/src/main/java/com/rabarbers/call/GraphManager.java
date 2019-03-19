@@ -26,7 +26,7 @@ public class GraphManager {
                 stack.pop();
             } else {
                 //backtrack
-                for (int i = stack.size(); i != c.getDepth() + 2; i--) {
+                for (int i = stack.size(); i != c.getDepth() + 1; i--) {
                     stack.pop();
                 }
             }
