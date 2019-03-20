@@ -13,7 +13,7 @@ public class SimpleTracePublisher extends TracePublisher {
             if (c instanceof Call) {
                 Call call = (Call) c;
                 sb.append(c.getDepth() == 0? "" : StringUtils.repeat(EMPTY_TAB, c.getDepth() - 1) + FILLED_TAB)
-                        .append(call.getMethod().getName())
+                        .append(getMethod(call))
                         .append(" (" + classLink(call.getMethod().getClassX(), call.getMethod().getClassX().getName(), "../") + ")")
                         .append(call.getMethod().getTraces().size() > 1? " [" + call.getMethod().getTraces().size() + "]": "")
                         .append(BR);

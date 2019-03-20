@@ -1,6 +1,7 @@
 package com.rabarbers.call.publish;
 
 import com.rabarbers.call.domain.Trace;
+import com.rabarbers.call.domain.call.Call;
 import com.rabarbers.call.html.page.HtmlPage;
 import org.apache.commons.lang3.StringUtils;
 
@@ -11,6 +12,7 @@ public abstract class TracePublisher extends HtmlPublisher {
 
     public void publish(Trace trace) {
         HtmlPage root = new HtmlPage("T: " + trace.getName());
+        appendStylesheets(root);
         appendScripts(root);
 
         StringBuilder sb = new StringBuilder();
@@ -20,8 +22,13 @@ public abstract class TracePublisher extends HtmlPublisher {
         writeFileWrapper(getPublisherFolder() + "traces/" + trace.getName() + ".html", root);
     }
 
-    protected void appendScripts(HtmlPage root) {
-    }
+    protected void appendScripts(HtmlPage root) {}
+
+    protected void appendStylesheets(HtmlPage root) {}
 
     protected abstract void appendTraceDetails(StringBuilder sb, Trace trace);
+
+    protected String getMethod(Call call) {
+        return call.getMethod().getName();
+    }
 }

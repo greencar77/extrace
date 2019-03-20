@@ -1,0 +1,8 @@
+body {
+    font-family: arial;
+}
+
+span.comment {
+    font-style: italic;
+    color: gray;
+}

@@ -4,28 +4,25 @@ import com.rabarbers.call.domain.Trace;
 import com.rabarbers.call.domain.call.Call;
 import com.rabarbers.call.domain.call.Statement;
 import com.rabarbers.call.domain.call.StubCall;
+import com.rabarbers.call.html.Link;
 import com.rabarbers.call.html.Script;
 import com.rabarbers.call.html.page.HtmlPage;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
-
-import java.io.File;
-import java.io.IOException;
 
 public class DynamicTracePublisher extends TracePublisher {
 
-    private static final String SCRIPT_FOLDER = "common/";
-
     protected void appendScripts(HtmlPage root) {
         Script script = new Script();
-        script.setAttr("src", "../" + SCRIPT_FOLDER + "trace.js");
+        script.setAttr("src", "../" + COMMON_FOLDER + "trace.js");
         root.getHead().appendChild(script);
+    }
 
-        try {
-            FileUtils.copyInputStreamToFile(this.getClass().getClassLoader().getResourceAsStream("trace.js"), new File(OUTPUT_FOLDER + getPublisherFolder() + SCRIPT_FOLDER + "trace.js"));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    protected void appendStylesheets(HtmlPage root) {
+        Link link = new Link();
+        link.setAttr("rel", "stylesheet");
+        link.setAttr("type", "text/css");
+        link.setAttr("href", "../" + COMMON_FOLDER + "main.css");
+        root.getHead().appendChild(link);
     }
 
     @Override
@@ -35,18 +32,20 @@ public class DynamicTracePublisher extends TracePublisher {
             if (c instanceof Call) {
                 Call call = (Call) c;
                 sb.append(c.getDepth() == 0? "" : StringUtils.repeat(EMPTY_TAB, c.getDepth() - 1) + FILLED_TAB)
-                        .append(call.getMethod().getName())
+                        .append(getMethod(call))
                         .append(" (" + classLink(call.getMethod().getClassX(), call.getMethod().getClassX().getName(), "../") + ")")
                         .append(call.getMethod().getTraces().size() > 1? " [" + call.getMethod().getTraces().size() + "]": "");
             } else if (c instanceof StubCall) {
                 StubCall stubCall = (StubCall) c;
-                sb.append(c.getDepth() == 0? "" : StringUtils.repeat(EMPTY_TAB, c.getDepth() - 1) + FILLED_TAB)
-                        .append(stubCall.getContent());
+                sb.append(c.getDepth() == 0? "" : StringUtils.repeat(EMPTY_TAB, c.getDepth() - 1) + FILLED_TAB);
+                sb.append("<span class=\"comment\">");
+                sb.append(stubCall.getContent());
+                sb.append("</span>");
             } else {
                 throw new RuntimeException(c.getClass().getCanonicalName());
             }
             sb.append(createCollapseExpand(c))
-                    .append(BR)
+                    .append("<br/>")
                     .append("</span>");
         });
     }
