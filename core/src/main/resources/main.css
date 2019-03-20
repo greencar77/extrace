@@ -6,3 +6,7 @@ span.comment {
     font-style: italic;
     color: gray;
 }
+
+span.method {
+    font-weight: bold;
+}
