@@ -42,7 +42,7 @@ public class HtmlDomainPublisher extends HtmlPublisher implements DomainPublishe
         writeFileWrapper(getPublisherFolder() + path, root);
     }
 
-    private void output(StringBuilder sb, Collection<ClassX> classes) {
+    protected void output(StringBuilder sb, Collection<ClassX> classes) {
         classes.stream()
                 .sorted()
                 .forEach(c -> {
