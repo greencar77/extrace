@@ -55,6 +55,7 @@ public class SuiteManager {
                 .collect(Collectors.toList());
 
         result.setCalls(calls);
+        result.setCallCount((int) calls.stream().filter(c -> c instanceof Call).count());
 
         graphManager.extractCallTree(result);
 

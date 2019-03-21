@@ -13,6 +13,7 @@ public class Trace implements Comparable<Trace> {
     private Statement rootStatement;
     private Set<ClassX> classes = new HashSet<>();
     private Set<MethodX> methods = new HashSet<>();
+    private int callCount;
 
     public Trace(String name) {
         this.name = name;
@@ -54,5 +55,13 @@ public class Trace implements Comparable<Trace> {
 
     public void setRootStatement(Statement rootStatement) {
         this.rootStatement = rootStatement;
+    }
+
+    public int getCallCount() {
+        return callCount;
+    }
+
+    public void setCallCount(int callCount) {
+        this.callCount = callCount;
     }
 }
