@@ -1,8 +1,10 @@
 package com.rabarbers.call;
 
+import com.rabarbers.call.domain.Domain;
 import com.rabarbers.call.domain.call.Call;
 import com.rabarbers.call.domain.call.Statement;
 import com.rabarbers.call.domain.call.StubCall;
+import com.rabarbers.call.domain.module.Module;
 import com.rabarbers.call.domain.row.MethodRow;
 import com.rabarbers.call.domain.row.TextRow;
 import com.rabarbers.call.domain.row.Row;
@@ -10,11 +12,13 @@ import com.rabarbers.call.domain.ClassX;
 import com.rabarbers.call.domain.MethodX;
 import com.rabarbers.call.domain.Suite;
 import com.rabarbers.call.domain.Trace;
+import com.rabarbers.call.modres.ThirdPartyModuleResolver;
 
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.rabarbers.call.publish.Publisher.DATA_FOLDER;
@@ -96,6 +100,21 @@ public class SuiteManager {
 
     public void appendTraceFromFolder(Suite suite, String folderPath) {
         appendTraceFromFolder(suite, new File(DATA_FOLDER + folderPath));
+    }
+
+    public void postProcess(Suite suite) {
+        extractModules(suite);
+    }
+
+    private void extractModules(Suite suite) {
+        Domain domain = suite.getDomain();
+        Set<Module> modules = domain.getModules();
+        ThirdPartyModuleResolver moduleResolver = new ThirdPartyModuleResolver();
+        domain.getClasses().values().forEach(c -> {
+            Module module = moduleResolver.resolve(c.getFullName());
+            if (modules)
+            }
+        );
     }
 
     public void appendTraceFromFolder(Suite suite, File file) {
