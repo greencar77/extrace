@@ -10,6 +10,8 @@ import com.rabarbers.call.domain.ClassX;
 import com.rabarbers.call.domain.MethodX;
 import com.rabarbers.call.domain.Suite;
 import com.rabarbers.call.domain.Trace;
+import com.rabarbers.call.singleline.TraceRowProcessor;
+import com.rabarbers.call.singleline.SingleLineProcessor;
 
 import java.io.File;
 import java.util.Arrays;
@@ -25,7 +27,8 @@ public class SuiteManager {
 
     public void appendTrace(Suite suite, File file) {
         System.out.println("Append trace: " + file.getAbsoluteFile());
-        List<Row> rows = RowTransformer.convertToList(file, suite.getAliases());
+        SingleLineProcessor reader = new TraceRowProcessor(file, suite.getAliases());
+        List<Row> rows = reader.readAll();
         suite.getDomain().getTraces().add(createTrace(suite, file.getName(), rows));
     }
 

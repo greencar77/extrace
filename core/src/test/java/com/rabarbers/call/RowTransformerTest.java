@@ -131,38 +131,6 @@ public class RowTransformerTest extends TestCase {
     }
 
     @Test
-    public void convertToList_convertToListStream() {
-        List<MethodRow> expected = new ArrayList<>();
-        expected.add(new MethodRow(1, "com.rabarbers.verbalmodeler.sim.renderer", "HeapRenderer", "render", "()"));
-        expected.add(new MethodRow(2, "com.rabarbers.verbalmodeler.sim", "Publisher", "printPage", "(int, com.rabarbers.verbalmodeler.sim.story.Story)"));
-        expected.add(new MethodRow(3, "com.rabarbers.verbalmodeler.sim", "Publisher", "publish", "()"));
-
-        StringBuilder sb = new StringBuilder();
-        sb.append("  com.rabarbers.verbalmodeler.sim.renderer.HeapRenderer#render").append("\n");
-        sb.append("    com.rabarbers.verbalmodeler.sim.Publisher#printPage(int, com.rabarbers.verbalmodeler.sim.story.Story)").append("\n");
-        sb.append("      com.rabarbers.verbalmodeler.sim.Publisher#publish").append("\n");
-
-        InputStream is = new ByteArrayInputStream(sb.toString().getBytes(StandardCharsets.UTF_8));
-        List<Row> result = RowTransformer.convertToList(is, null);
-
-        assertEquals(expected, result);
-    }
-
-    @Test
-    public void convertToList_convertToListFile() {
-        List<MethodRow> expected = new ArrayList<>();
-        expected.add(new MethodRow(1, "com.rabarbers.verbalmodeler.sim.renderer", "HeapRenderer", "render", "()"));
-        expected.add(new MethodRow(2, "com.rabarbers.verbalmodeler.sim", "Publisher", "printPage", "(int, com.rabarbers.verbalmodeler.sim.story.Story)"));
-        expected.add(new MethodRow(3, "com.rabarbers.verbalmodeler.sim", "Publisher", "publish", "()"));
-
-        File file = new File("src/test/resources/calls.txt");
-
-        List<Row> result = RowTransformer.convertToList(file, null);
-
-        assertEquals(expected, result);
-    }
-
-    @Test
     public void convertToCallTrimmed_emptyLine() {
         Row row = RowTransformer.convertToCallTrimmed("", null, 0);
         assertNull(row);
@@ -212,23 +180,5 @@ public class RowTransformerTest extends TestCase {
     public void convertToCallTrimmed_emptyLinetabs() {
         Row row = RowTransformer.convertToCallTrimmed("\t\t\t", null, 0); //From Excel
         assertNull(row);
-    }
-
-    @Test
-    public void convertToList_withBlanks() {
-        List<MethodRow> expected = new ArrayList<>();
-        expected.add(null);
-        expected.add(null);
-        expected.add(new MethodRow(3, "com.rabarbers.verbalmodeler.sim", "Publisher", "publish", "()"));
-
-        StringBuilder sb = new StringBuilder();
-        sb.append("").append("\n");
-        sb.append("").append("\n");
-        sb.append("      com.rabarbers.verbalmodeler.sim.Publisher#publish").append("\n");
-
-        InputStream is = new ByteArrayInputStream(sb.toString().getBytes(StandardCharsets.UTF_8));
-        List<Row> result = RowTransformer.convertToList(is, null);
-
-        assertEquals(expected, result);
     }
 }

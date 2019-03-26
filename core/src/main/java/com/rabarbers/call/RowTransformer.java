@@ -1,19 +1,10 @@
 package com.rabarbers.call;
 
 import com.rabarbers.call.domain.row.MethodRow;
-import com.rabarbers.call.domain.row.TextRow;
 import com.rabarbers.call.domain.row.Row;
+import com.rabarbers.call.domain.row.TextRow;
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -134,28 +125,6 @@ public class RowTransformer {
         }
 
         return depth;
-    }
-
-    public static List<Row> convertToList(File file, Map<String, String> aliases) {
-        try {
-            return convertToList(new FileInputStream(file), aliases);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(file.getAbsolutePath(), e);
-        }
-    }
-
-    public static List<Row> convertToList(InputStream is, Map<String, String> aliases) {
-        List<Row> result = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                result.add(convertToCallWithWhitespace(line, aliases));
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        return result;
     }
 
     private static String depthToIndent(int depth) {
