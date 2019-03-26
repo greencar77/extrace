@@ -34,7 +34,10 @@ public abstract class SingleLineProcessor<T> {
         try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
             String line;
             while ((line = br.readLine()) != null) {
-                result.add(convert(line));
+                T item = convert(line);
+                if (item != null) {
+                    result.add(item);
+                }
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
