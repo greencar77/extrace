@@ -10,3 +10,8 @@ span.comment {
 span.method {
     font-weight: bold;
 }
+
+a.callclass {
+    color: black;
+    text-decoration: none;
+}

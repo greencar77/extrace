@@ -13,7 +13,7 @@ public abstract class HtmlPublisher extends Publisher {
     public static final String BR = "<br/>\n";
 
     protected String classLink(ClassX classX, String caption, String backtrack) {
-        return "<a href=\""
+        return "<a class=\"callclass\" href=\""
                 + (backtrack == null? "": backtrack)
                 + "classes/"
                 + toPath(classX.getPackageX()) + "/" + classX.getName() + ".html" + "\">" + caption + "</a>";

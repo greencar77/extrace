@@ -4,6 +4,7 @@ import com.rabarbers.call.domain.ClassX;
 import com.rabarbers.call.domain.Domain;
 import com.rabarbers.call.domain.MethodX;
 import com.rabarbers.call.domain.Trace;
+import com.rabarbers.call.domain.call.Call;
 import com.rabarbers.call.filter.ClassFilter;
 import com.rabarbers.call.filter.FilterListBuilder;
 import com.rabarbers.call.html.page.HtmlPage;
@@ -127,8 +128,30 @@ public class HtmlDomainPublisher extends HtmlPublisher implements DomainPublishe
 
     private String traceLink(ClassX fromClass, Trace trace) {
         String backtrack = StringUtils.repeat("../", fromClass.packageCount() + 1); //+1 for "classes/"
+        int maxDepth = trace.getCalls().stream()
+                .filter(c -> c instanceof Call && ((Call) c).getMethod().getClassX().equals(fromClass))
+                .mapToInt(c -> c.getDepth())
+                .min().getAsInt();
         return "<a href=\"" + backtrack + "traces/" + trace.getName() + ".html" + "\">" + trace.getName() + "</a>"
-                + " (" + trace.getCallCount() + ")";
+                + " ("
+                + "d" + maxDepth
+                + "-"
+                + trace.getCallCount()
+                + ")";
+    }
+
+    private String traceLink(ClassX fromClass, Trace trace, MethodX method) {
+        String backtrack = StringUtils.repeat("../", fromClass.packageCount() + 1); //+1 for "classes/"
+        int maxDepth = trace.getCalls().stream()
+                .filter(c -> c instanceof Call && ((Call) c).getMethod().equals(method))
+                .mapToInt(c -> c.getDepth())
+                .min().getAsInt();
+        return "<a href=\"" + backtrack + "traces/" + trace.getName() + ".html" + "\">" + trace.getName() + "</a>"
+                + " ("
+                + "d" + maxDepth
+                + "-"
+                + trace.getCallCount()
+                + ")";
     }
 
     protected void methodDetails(StringBuilder sb, MethodX method) {
@@ -140,7 +163,7 @@ public class HtmlDomainPublisher extends HtmlPublisher implements DomainPublishe
         sb.append("<ul>");
         method.getTraces().stream()
                 .sorted()
-                .forEach(t -> sb.append("<li>").append(traceLink(method.getClassX(), t)).append("</li>"));
+                .forEach(t -> sb.append("<li>").append(traceLink(method.getClassX(), t, method)).append("</li>"));
         sb.append("</ul>");
     }
 
