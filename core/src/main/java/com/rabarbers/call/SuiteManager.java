@@ -10,13 +10,16 @@ import com.rabarbers.call.domain.ClassX;
 import com.rabarbers.call.domain.MethodX;
 import com.rabarbers.call.domain.Suite;
 import com.rabarbers.call.domain.Trace;
+import com.rabarbers.call.singleline.StringProcessor;
 import com.rabarbers.call.singleline.TraceRowProcessor;
 import com.rabarbers.call.singleline.SingleLineProcessor;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.rabarbers.call.publish.Publisher.DATA_FOLDER;
@@ -121,5 +124,12 @@ public class SuiteManager {
 
     private void bind(MethodX methodX, ClassX classX) {
         methodX.setClassX(classX);
+    }
+
+    public void loadForbidden(Suite suite) {
+        StringProcessor stringProcessor = new StringProcessor(new File(DATA_FOLDER + "input/interface.txt"));
+        Set<String> forbiddenClasses = new HashSet<>();
+        forbiddenClasses.addAll(stringProcessor.readAll());
+        suite.setForbiddenClasses(forbiddenClasses);
     }
 }
