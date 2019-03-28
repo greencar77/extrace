@@ -55,9 +55,7 @@ public class TraceRowProcessorTest {
 
     @Test
     public void convertToList_withBlanks() {
-        List<MethodRow> expected = new ArrayList<>();
-        expected.add(null);
-        expected.add(null);
+        List<Row> expected = new ArrayList<>();
         expected.add(new MethodRow(3, "com.rabarbers.verbalmodeler.sim", "Publisher", "publish", "()"));
 
         StringBuilder sb = new StringBuilder();
