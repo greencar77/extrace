@@ -140,6 +140,13 @@ public class HtmlDomainPublisher extends HtmlPublisher implements DomainPublishe
                 + ")";
     }
 
+    protected String traceLink(String backtrack, Trace trace) {
+        return "<a href=\"" + backtrack + "traces/" + trace.getName() + ".html" + "\">" + trace.getName() + "</a>"
+                + " ("
+                + trace.getCallCount()
+                + ")";
+    }
+
     private String traceLink(ClassX fromClass, Trace trace, MethodX method) {
         String backtrack = StringUtils.repeat("../", fromClass.packageCount() + 1); //+1 for "classes/"
         int maxDepth = trace.getCalls().stream()
