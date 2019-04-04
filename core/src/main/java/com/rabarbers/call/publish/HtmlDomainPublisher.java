@@ -20,7 +20,7 @@ public class HtmlDomainPublisher extends HtmlPublisher implements DomainPublishe
 
     private TracePublisher tracePublisher = new DynamicTracePublisher();
 
-    public void publishDomainClasses(Domain domain, String path, ClassFilter classFilter) {
+    public void publishClassList(Domain domain, String path, ClassFilter classFilter) {
         HtmlPage root = new HtmlPage("Classes");
 
         StringBuilder sb = new StringBuilder();
@@ -51,8 +51,8 @@ public class HtmlDomainPublisher extends HtmlPublisher implements DomainPublishe
                 });
     }
 
-    public void publishDomainClasses(Domain domain, String path, ClassFilter mainFilter, List<FilterListBuilder.Item> filterList) {
-        HtmlPage root = new HtmlPage("Classes grouped");
+    public void publishClassList(Domain domain, String path, String title, ClassFilter mainFilter, List<FilterListBuilder.Item> filterList) {
+        HtmlPage root = new HtmlPage(title);
 
         StringBuilder sb = new StringBuilder();
         Set<ClassX> remainingClasses;
