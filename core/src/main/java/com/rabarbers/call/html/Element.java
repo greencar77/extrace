@@ -11,6 +11,7 @@ public abstract class Element {
     protected StringBuilder childContent = new StringBuilder();
     protected List<Element> children = new ArrayList<>();
     private Map<String, String> attributes = new HashMap<>();
+    private String style;
 
     public Element(String name) {
         this.name = name;
@@ -69,7 +70,20 @@ public abstract class Element {
         attributes.put(key, value);
     }
 
+    public void setAttr(String key, Integer value) {
+        attributes.put(key, value.toString());
+    }
+
     public Map<String, String> getAttributes() {
         return attributes;
+    }
+
+    public String getStyle() {
+        return style;
+    }
+
+    public void setStyle(String style) {
+        this.style = style;
+        setAttr("style", style);
     }
 }
