@@ -9,7 +9,7 @@ import java.io.IOException;
 public abstract class HtmlPublisher extends Publisher {
 
     protected static final String COMMON_FOLDER = "common/";
-    private static final String HTML_FOLDER = "html/";
+    public static final String HTML_FOLDER = "html/";
     public static final String BR = "<br/>\n";
 
     protected String classLink(ClassX classX, String caption, String backtrack) {

@@ -3,9 +3,8 @@ package com.rabarbers.call.html.page;
 import com.rabarbers.call.html.Body;
 import com.rabarbers.call.html.Head;
 import com.rabarbers.call.html.Html;
+import com.rabarbers.call.html.Link;
 import com.rabarbers.call.html.Title;
-
-import java.util.ArrayList;
 
 public class HtmlPage extends Html {
     private Head head;
@@ -37,5 +36,17 @@ public class HtmlPage extends Html {
     public void addBody(Body body) {
         this.body = body;
         this.children.add(body);
+    }
+
+    public void addCssLink(String href) {
+        getHead().appendChild(createCssLink(href));
+    }
+
+    public Link createCssLink(String href) {
+        Link link = new Link();
+        link.setAttr("rel", "stylesheet");
+        link.setAttr("type", "text/css");
+        link.setAttr("href", href);
+        return link;
     }
 }

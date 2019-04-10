@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 public abstract class Element {
     private String name;
+    private String id;
     protected StringBuilder childContent = new StringBuilder();
     protected List<Element> children = new ArrayList<>();
     private Map<String, String> attributes = new HashMap<>();
@@ -15,6 +16,11 @@ public abstract class Element {
 
     public Element(String name) {
         this.name = name;
+    }
+
+    public Element(String name, String id) {
+        this.name = name;
+        setId(id);
     }
 
     public String getName() {
@@ -80,6 +86,11 @@ public abstract class Element {
 
     public String getStyle() {
         return style;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+        setAttr("id", id);
     }
 
     public void setStyle(String style) {

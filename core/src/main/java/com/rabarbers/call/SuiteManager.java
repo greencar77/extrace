@@ -1,21 +1,23 @@
 package com.rabarbers.call;
 
-import com.rabarbers.call.domain.call.Call;
-import com.rabarbers.call.domain.call.Statement;
-import com.rabarbers.call.domain.call.StubCall;
-import com.rabarbers.call.domain.row.MethodRow;
-import com.rabarbers.call.domain.row.TextRow;
-import com.rabarbers.call.domain.row.Row;
 import com.rabarbers.call.domain.ClassX;
 import com.rabarbers.call.domain.MethodX;
 import com.rabarbers.call.domain.Suite;
 import com.rabarbers.call.domain.Trace;
+import com.rabarbers.call.domain.call.Call;
+import com.rabarbers.call.domain.call.Statement;
+import com.rabarbers.call.domain.call.StubCall;
+import com.rabarbers.call.domain.row.MethodRow;
+import com.rabarbers.call.domain.row.Row;
+import com.rabarbers.call.domain.row.TextRow;
+import com.rabarbers.call.filter.ClassFilter;
+import com.rabarbers.call.singleline.SingleLineProcessor;
 import com.rabarbers.call.singleline.StringProcessor;
 import com.rabarbers.call.singleline.TraceRowProcessor;
-import com.rabarbers.call.singleline.SingleLineProcessor;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -131,5 +133,12 @@ public class SuiteManager {
         Set<String> forbiddenClasses = new HashSet<>();
         forbiddenClasses.addAll(stringProcessor.readAll());
         suite.setForbiddenClasses(forbiddenClasses);
+    }
+
+    public List<ClassX> filter(Collection<ClassX> classes, ClassFilter filter) {
+        return classes.stream()
+                .filter(filter::match)
+                .sorted()
+                .collect(Collectors.toList());
     }
 }
