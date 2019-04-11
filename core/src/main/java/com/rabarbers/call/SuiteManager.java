@@ -14,8 +14,10 @@ import com.rabarbers.call.filter.ClassFilter;
 import com.rabarbers.call.singleline.SingleLineProcessor;
 import com.rabarbers.call.singleline.StringProcessor;
 import com.rabarbers.call.singleline.TraceRowProcessor;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -140,5 +142,25 @@ public class SuiteManager {
                 .filter(filter::match)
                 .sorted()
                 .collect(Collectors.toList());
+    }
+
+    public List<ClassX> filter(Collection<ClassX> classes, ClassFilter... filterArr) {
+        Collection<ClassX> portion = classes;
+        for (ClassFilter filter: filterArr) {
+            portion = portion.stream()
+                    .filter(filter::match)
+                    .sorted()
+                    .collect(Collectors.toList());
+        }
+        return new ArrayList<>(portion);
+    }
+
+    public Pair<List<ClassX>,List<ClassX>> split(Collection<ClassX> classes, ClassFilter... filterArr) {
+        Collection<ClassX> portion = filter(classes, filterArr);
+
+        List<ClassX> tail = new ArrayList<>(classes);
+        tail.removeAll(portion);
+
+        return Pair.of(new ArrayList<>(portion), tail);
     }
 }
