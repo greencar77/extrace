@@ -6,6 +6,11 @@ public class InnerHtml extends Element {
         super(null);
     }
 
+    public InnerHtml(StringBuilder stringBuilder) {
+        this();
+        appendChildContent(stringBuilder);
+    }
+
     @Override
     public StringBuilder getContent() {
         return getChildContent();

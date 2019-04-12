@@ -4,6 +4,9 @@ import com.rabarbers.call.domain.Trace;
 import com.rabarbers.call.domain.call.Call;
 import com.rabarbers.call.domain.call.Statement;
 import com.rabarbers.call.domain.call.StubCall;
+import com.rabarbers.call.html.Element;
+import com.rabarbers.call.html.InnerHtml;
+import com.rabarbers.call.html.Element;
 import com.rabarbers.call.html.Link;
 import com.rabarbers.call.html.Script;
 import com.rabarbers.call.html.page.HtmlPage;
@@ -26,13 +29,14 @@ public class DynamicTracePublisher extends TracePublisher {
     }
 
     @Override
-    protected void appendTraceDetails(StringBuilder sb, Trace trace) {
+    protected Element appendTraceDetails(Element element, Trace trace) {
+        StringBuilder sb = new StringBuilder();
+
         if (!trace.getPatterns().isEmpty()) {
             trace.getPatterns().forEach(p -> {
                 sb.append(p.getId()).append("<br/>");
             });
         }
-
         trace.getCalls().forEach(c -> {
             sb.append("<span id=\"" + "s" + c.getTreeIndex() + "\">");
             if (c instanceof Call) {
@@ -54,6 +58,10 @@ public class DynamicTracePublisher extends TracePublisher {
                     .append("<br/>")
                     .append("</span>");
         });
+
+        InnerHtml result = new InnerHtml(sb);
+        element.appendChild(result);
+        return result;
     }
 
     private StringBuilder createCollapseExpand(Statement statement) {

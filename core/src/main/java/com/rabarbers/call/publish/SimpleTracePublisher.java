@@ -3,12 +3,16 @@ package com.rabarbers.call.publish;
 import com.rabarbers.call.domain.Trace;
 import com.rabarbers.call.domain.call.Call;
 import com.rabarbers.call.domain.call.StubCall;
+import com.rabarbers.call.html.Element;
+import com.rabarbers.call.html.InnerHtml;
 import org.apache.commons.lang3.StringUtils;
 
 public class SimpleTracePublisher extends TracePublisher {
 
     @Override
-    protected void appendTraceDetails(StringBuilder sb, Trace trace) {
+    protected Element appendTraceDetails(Element element, Trace trace) {
+        StringBuilder sb = new StringBuilder();
+
         trace.getCalls().forEach(c -> {
             if (c instanceof Call) {
                 Call call = (Call) c;
@@ -26,5 +30,9 @@ public class SimpleTracePublisher extends TracePublisher {
                 throw new RuntimeException(c.getClass().getCanonicalName());
             }
         });
+
+        InnerHtml result = new InnerHtml(sb);
+        element.appendChild(result);
+        return result;
     }
 }
