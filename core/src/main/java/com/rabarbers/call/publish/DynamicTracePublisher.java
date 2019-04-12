@@ -27,6 +27,12 @@ public class DynamicTracePublisher extends TracePublisher {
 
     @Override
     protected void appendTraceDetails(StringBuilder sb, Trace trace) {
+        if (!trace.getPatterns().isEmpty()) {
+            trace.getPatterns().forEach(p -> {
+                sb.append(p.getId()).append("<br/>");
+            });
+        }
+
         trace.getCalls().forEach(c -> {
             sb.append("<span id=\"" + "s" + c.getTreeIndex() + "\">");
             if (c instanceof Call) {

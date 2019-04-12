@@ -5,7 +5,10 @@ import com.rabarbers.call.domain.Domain;
 import com.rabarbers.call.domain.MethodX;
 import com.rabarbers.call.domain.Trace;
 import com.rabarbers.call.filter.ClassFilter;
+import com.rabarbers.call.pattern.Pattern;
+import com.rabarbers.call.pattern.image.PatternImageProducer;
 
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -101,7 +104,7 @@ public class TxtDomainPublisher extends Publisher implements DomainPublisher {
     }
 
     @Override
-    public void publishTraceDetails(Domain domain, String path) {
+    public void publishTraceDetails(Domain domain, String path, Map<Class<? extends Pattern>, PatternImageProducer<?>> patternImageProducerMap) {
         throw new RuntimeException("Not implemented"); //TODO
     }
 

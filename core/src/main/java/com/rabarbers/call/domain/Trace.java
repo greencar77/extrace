@@ -2,7 +2,9 @@ package com.rabarbers.call.domain;
 
 import com.rabarbers.call.domain.call.Call;
 import com.rabarbers.call.domain.call.Statement;
+import com.rabarbers.call.pattern.Pattern;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -14,6 +16,7 @@ public class Trace implements Comparable<Trace> {
     private Set<ClassX> classes = new HashSet<>();
     private Set<MethodX> methods = new HashSet<>();
     private int callCount;
+    private List<Pattern> patterns = new ArrayList<>();
 
     public Trace(String name) {
         this.name = name;
@@ -63,5 +66,9 @@ public class Trace implements Comparable<Trace> {
 
     public void setCallCount(int callCount) {
         this.callCount = callCount;
+    }
+
+    public List<Pattern> getPatterns() {
+        return patterns;
     }
 }

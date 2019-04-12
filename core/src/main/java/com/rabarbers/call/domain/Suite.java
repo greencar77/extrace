@@ -1,5 +1,7 @@
 package com.rabarbers.call.domain;
 
+import com.rabarbers.call.pattern.PatternProducer;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -14,6 +16,7 @@ public class Suite {
     private Map<String, String> aliases = new HashMap<>();
     private Set<String> forbiddenClasses = new HashSet<>();
     private Set<String> forbiddenMethods = new HashSet<>();
+    private Set<PatternProducer<?>> patternProducers = new HashSet<>();
 
     public Domain getDomain() {
         return domain;
@@ -37,5 +40,13 @@ public class Suite {
 
     public void setForbiddenMethods(Set<String> forbiddenMethods) {
         this.forbiddenMethods = forbiddenMethods;
+    }
+
+    public Set<PatternProducer<?>> getPatternProducers() {
+        return patternProducers;
+    }
+
+    public void register(PatternProducer<?> patternProducer) {
+        patternProducers.add(patternProducer);
     }
 }

@@ -8,11 +8,14 @@ import com.rabarbers.call.domain.call.Call;
 import com.rabarbers.call.filter.ClassFilter;
 import com.rabarbers.call.filter.FilterListBuilder;
 import com.rabarbers.call.html.page.HtmlPage;
+import com.rabarbers.call.pattern.Pattern;
+import com.rabarbers.call.pattern.image.PatternImageProducer;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -175,7 +178,7 @@ public class HtmlDomainPublisher extends HtmlPublisher implements DomainPublishe
     }
 
     @Override
-    public void publishTraceDetails(Domain domain, String path) {
+    public void publishTraceDetails(Domain domain, String path, Map<Class<? extends Pattern>, PatternImageProducer<?>> patternImageProducerMap) {
         domain.getTraces().stream()
                 .forEach(t -> tracePublisher.publish(t));
     }
