@@ -93,6 +93,7 @@ public abstract class AbstractApp {
                 pattern.getTraces().add(t);
                 t.getPatterns().add(pattern);
             });
+            System.out.println(prod.getClass().getSimpleName() + " " + prod.getPatterns().size());
         });
     }
 

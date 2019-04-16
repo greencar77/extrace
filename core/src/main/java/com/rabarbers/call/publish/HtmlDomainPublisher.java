@@ -180,6 +180,6 @@ public class HtmlDomainPublisher extends HtmlPublisher implements DomainPublishe
     @Override
     public void publishTraceDetails(Domain domain, String path, Map<Class<? extends Pattern>, PatternImageProducer<?>> patternImageProducerMap) {
         domain.getTraces().stream()
-                .forEach(t -> tracePublisher.publish(t));
+                .forEach(t -> tracePublisher.publish(t, patternImageProducerMap));
     }
 }

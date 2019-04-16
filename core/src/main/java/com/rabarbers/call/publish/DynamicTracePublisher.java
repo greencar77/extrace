@@ -10,7 +10,12 @@ import com.rabarbers.call.html.Element;
 import com.rabarbers.call.html.Link;
 import com.rabarbers.call.html.Script;
 import com.rabarbers.call.html.page.HtmlPage;
+import com.rabarbers.call.html.svg.Svg;
+import com.rabarbers.call.pattern.Pattern;
+import com.rabarbers.call.pattern.image.PatternImageProducer;
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.Map;
 
 public class DynamicTracePublisher extends TracePublisher {
 
@@ -29,14 +34,11 @@ public class DynamicTracePublisher extends TracePublisher {
     }
 
     @Override
-    protected Element appendTraceDetails(Element element, Trace trace) {
-        StringBuilder sb = new StringBuilder();
+    protected Element appendTraceDetails(Element element, Trace trace, Map<Class<? extends Pattern>, PatternImageProducer<? extends Pattern>> patternImageProducerMap) {
 
-        if (!trace.getPatterns().isEmpty()) {
-            trace.getPatterns().forEach(p -> {
-                sb.append(p.getId()).append("<br/>");
-            });
-        }
+        appendPatterns(element, trace, patternImageProducerMap);
+
+        StringBuilder sb = new StringBuilder();
         trace.getCalls().forEach(c -> {
             sb.append("<span id=\"" + "s" + c.getTreeIndex() + "\">");
             if (c instanceof Call) {
@@ -62,6 +64,28 @@ public class DynamicTracePublisher extends TracePublisher {
         InnerHtml result = new InnerHtml(sb);
         element.appendChild(result);
         return result;
+    }
+
+    private void appendPatternsTxt(Element element, Trace trace) { //TODO
+        StringBuilder sb = new StringBuilder();
+
+        if (!trace.getPatterns().isEmpty()) {
+            trace.getPatterns().forEach(p -> {
+                sb.append(p.getId()).append("<br/>");
+            });
+        }
+
+        InnerHtml result = new InnerHtml(sb);
+        element.appendChild(result);
+    }
+
+    private void appendPatterns(Element element, Trace trace, Map<Class<? extends Pattern>, PatternImageProducer<? extends Pattern>> patternImageProducerMap) {
+        if (!trace.getPatterns().isEmpty()) {
+            for (Pattern pattern: trace.getPatterns()) {
+//                Svg svg = new Svg(30, 40); //TODO
+                element.appendChild(patternImageProducerMap.get(pattern.getClass()).produce(pattern));
+            }
+        }
     }
 
     private StringBuilder createCollapseExpand(Statement statement) {

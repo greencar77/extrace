@@ -28,6 +28,10 @@ public class MethodX implements Comparable<MethodX> {
         return name + signatureX;
     }
 
+    public String getMethodGlobalId() {
+        return classX.getFullName() + "#" + name + signatureX;
+    }
+
     public ClassX getClassX() {
         return classX;
     }
