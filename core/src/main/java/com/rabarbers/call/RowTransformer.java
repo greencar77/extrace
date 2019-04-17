@@ -35,7 +35,7 @@ public class RowTransformer {
             return result;
         }
 
-        statement = normalizeStatement(statement, aliases);
+        statement = normalizeStatement(statement);
 
         String packageToMethod = statement.substring(0, statement.lastIndexOf("("));
 
@@ -48,7 +48,7 @@ public class RowTransformer {
                 method, signature);
     }
 
-    private static String normalizeStatement(String statement, Map<String, String> aliases) {
+    public static String normalizeStatement(String statement) {
 
         if (statement.indexOf(INTELLIJ_METHOD_SEPARATOR) == -1) {
             String[] parts = statement.split("\\.");

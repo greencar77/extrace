@@ -44,6 +44,7 @@ public abstract class AbstractApp {
         suite = new Suite();
         loadAliases();
         registerPatternProducers();
+        registerPatternImageProducers();
         suiteManager.loadForbidden(suite);
 
         suiteManager.appendTraceFromFolder(suite, "traces");

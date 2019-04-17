@@ -5,5 +5,5 @@ import com.rabarbers.call.html.svg.Svg;
 import com.rabarbers.call.pattern.Pattern;
 
 public abstract class PatternImageProducer<P extends Pattern> {
-    public abstract Element produce(P pattern);
+    public abstract Element produce(Pattern pattern);
 }

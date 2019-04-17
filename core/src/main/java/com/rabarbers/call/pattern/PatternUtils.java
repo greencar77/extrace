@@ -1,5 +1,6 @@
 package com.rabarbers.call.pattern;
 
+import com.rabarbers.call.RowTransformer;
 import com.rabarbers.call.domain.Trace;
 import com.rabarbers.call.domain.call.Call;
 
@@ -9,8 +10,10 @@ public class PatternUtils {
     }
 
     public static boolean containsMethodTransition(Trace trace, String methodFrom, String methodTo) {
+        String normalizedMethodFrom = RowTransformer.normalizeStatement(methodFrom);
+        String normalizedMethodTo = RowTransformer.normalizeStatement(methodTo);
         return trace.getCalls().stream()
-                .filter(c -> c instanceof Call && ((Call) c).getMethod().getMethodGlobalId().equals(methodTo))
+                .filter(c -> c instanceof Call && containsMethodTransition((Call) c, normalizedMethodFrom, normalizedMethodTo))
                 .findAny()
                 .isPresent();
     }
