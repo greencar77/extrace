@@ -22,4 +22,8 @@ public abstract class Pattern {
     }
 
     public abstract String getId();
+
+    public String getPatternId() {
+        return this.getClass().getSimpleName() + "-" + getId();
+    }
 }
