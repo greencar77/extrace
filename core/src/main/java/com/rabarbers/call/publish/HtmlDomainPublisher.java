@@ -7,7 +7,7 @@ import com.rabarbers.call.domain.Trace;
 import com.rabarbers.call.domain.call.Call;
 import com.rabarbers.call.filter.ClassFilter;
 import com.rabarbers.call.filter.FilterListBuilder;
-import com.rabarbers.call.html.page.HtmlPage;
+import com.rabarbers.htmlgen.html.page.HtmlPage;
 import com.rabarbers.call.pattern.Pattern;
 import com.rabarbers.call.pattern.image.PatternImageProducer;
 import org.apache.commons.lang3.StringUtils;

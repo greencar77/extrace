@@ -1,7 +1,7 @@
-package com.rabarbers.call.html.svg;
+package com.rabarbers.htmlgen.html.svg;
 
-import com.rabarbers.call.html.Element;
-import com.rabarbers.call.html.page.HtmlPage;
+import com.rabarbers.htmlgen.html.Element;
+import com.rabarbers.htmlgen.html.page.HtmlPage;
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;

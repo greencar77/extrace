@@ -1,4 +1,4 @@
-package com.rabarbers.call.html;
+package com.rabarbers.htmlgen.html;
 
 import java.util.ArrayList;
 import java.util.HashMap;

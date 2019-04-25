@@ -1,6 +1,6 @@
 package com.rabarbers.call.publish;
 
-import com.rabarbers.call.html.Element;
+import com.rabarbers.htmlgen.html.Element;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;

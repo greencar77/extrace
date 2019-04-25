@@ -1,10 +1,10 @@
-package com.rabarbers.call.html.page;
+package com.rabarbers.htmlgen.html.page;
 
-import com.rabarbers.call.html.Body;
-import com.rabarbers.call.html.Head;
-import com.rabarbers.call.html.Html;
-import com.rabarbers.call.html.Link;
-import com.rabarbers.call.html.Title;
+import com.rabarbers.htmlgen.html.Body;
+import com.rabarbers.htmlgen.html.Head;
+import com.rabarbers.htmlgen.html.Html;
+import com.rabarbers.htmlgen.html.Link;
+import com.rabarbers.htmlgen.html.Title;
 
 public class HtmlPage extends Html {
     private Head head;

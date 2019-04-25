@@ -1,6 +1,6 @@
-package com.rabarbers.call.html.svg;
+package com.rabarbers.htmlgen.html.svg;
 
-import com.rabarbers.call.html.Element;
+import com.rabarbers.htmlgen.html.Element;
 
 public class Rect extends Element {
 

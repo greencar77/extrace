@@ -1,4 +1,4 @@
-package com.rabarbers.call.html;
+package com.rabarbers.htmlgen.html;
 
 public class Span extends Element {
 
