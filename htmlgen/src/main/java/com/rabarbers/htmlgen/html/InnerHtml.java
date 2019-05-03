@@ -11,6 +11,13 @@ public class InnerHtml extends Element {
         appendChildContent(stringBuilder);
     }
 
+    public InnerHtml(String string) {
+        this();
+        StringBuilder sb = new StringBuilder();
+        sb.append(string);
+        appendChildContent(sb);
+    }
+
     @Override
     public StringBuilder getContent() {
         return getChildContent();
