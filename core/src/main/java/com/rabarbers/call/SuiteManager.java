@@ -133,7 +133,10 @@ public class SuiteManager {
     public void loadForbidden(Suite suite) {
         StringProcessor stringProcessor = new StringProcessor(new File(DATA_FOLDER + "input/interface.txt"));
         Set<String> forbiddenClasses = new HashSet<>();
-        forbiddenClasses.addAll(stringProcessor.readAll());
+        List<String> forbidden = stringProcessor.readAll();
+        if (forbidden != null) {
+            forbiddenClasses.addAll(forbidden);
+        }
         suite.setForbiddenClasses(forbiddenClasses);
     }
 

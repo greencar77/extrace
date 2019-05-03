@@ -46,6 +46,10 @@ public abstract class SingleLineProcessor<T> {
     }
 
     private List<T> readAllFromFile() {
+        if (!file.exists()) {
+            return null;
+        }
+
         List<T> result = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)))) {
             String line;
