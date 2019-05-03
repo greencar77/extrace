@@ -1,0 +1,18 @@
+//runDifferentInstances.txt				
+kb.kb107.weldstand.App#runDifferentInstances				
+	org.jboss.weld.environment.se.Weld			
+	org.jboss.weld.environment.se.Weld#initialize			
+	org.jboss.weld.environment.se.WeldContainer#instance()			
+		org.jboss.weld.environment.se.WeldContainer#checkState		
+		org.jboss.weld.environment.se.WeldContainer#getInstance		
+	//i: javax.enterprise.inject.Instance#select(java.lang.Class<U>, java.lang.annotation.Annotation...)			
+	org.jboss.weld.bean.builtin.InstanceImpl#select(java.lang.Class<U>, java.lang.annotation.Annotation...)			
+		org.jboss.weld.bean.builtin.InstanceImpl#selectInstance		
+			org.jboss.weld.bean.builtin.AbstractFacade#getBeanManager	
+			org.jboss.weld.bean.builtin.FacadeInjectionPoint	
+				org.jboss.weld.util.reflection.ParameterizedTypeImpl
+				org.jboss.weld.util.Beans#mergeInQualifiers
+			org.jboss.weld.bean.builtin.InstanceImpl	
+				org.jboss.weld.bean.builtin.AbstractFacade#AbstractFacade
+	org.jboss.weld.environment.se.WeldContainer#instance()			
+	javax.enterprise.inject.Instance#select(java.lang.Class<U>, java.lang.annotation.Annotation...)			
