@@ -131,7 +131,7 @@ public class HtmlDomainPublisher extends HtmlPublisher implements DomainPublishe
 
     private String traceLink(ClassX fromClass, Trace trace) {
         String backtrack = StringUtils.repeat("../", fromClass.packageCount() + 1); //+1 for "classes/"
-        int maxDepth = trace.getCalls().stream()
+        int maxDepth = trace.getStatements().stream()
                 .filter(c -> c instanceof Call && ((Call) c).getMethod().getClassX().equals(fromClass))
                 .mapToInt(c -> c.getDepth())
                 .min().getAsInt();
@@ -152,7 +152,7 @@ public class HtmlDomainPublisher extends HtmlPublisher implements DomainPublishe
 
     private String traceLink(ClassX fromClass, Trace trace, MethodX method) {
         String backtrack = StringUtils.repeat("../", fromClass.packageCount() + 1); //+1 for "classes/"
-        int maxDepth = trace.getCalls().stream()
+        int maxDepth = trace.getStatements().stream()
                 .filter(c -> c instanceof Call && ((Call) c).getMethod().equals(method))
                 .mapToInt(c -> c.getDepth())
                 .min().getAsInt();

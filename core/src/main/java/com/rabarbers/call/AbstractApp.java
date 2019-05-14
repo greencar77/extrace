@@ -34,6 +34,7 @@ public abstract class AbstractApp {
 
     public void run() {
         createSuite();
+        deriveTraces();
         processPatterns();
 
         publishStandard();
@@ -100,5 +101,8 @@ public abstract class AbstractApp {
 
     protected void register(Class<? extends Pattern> classReg, PatternImageProducer<?> producer) {
         patternImageProducerMap.put(classReg, producer);
+    }
+
+    protected void deriveTraces() {
     }
 }

@@ -1,6 +1,5 @@
 package com.rabarbers.call.domain;
 
-import com.rabarbers.call.domain.call.Call;
 import com.rabarbers.call.domain.call.Statement;
 import com.rabarbers.call.pattern.Pattern;
 
@@ -11,28 +10,28 @@ import java.util.Set;
 
 public class Trace implements Comparable<Trace> {
     private String name;
-    private List<Statement> calls;
+    private List<Statement> statements;
     private Statement rootStatement;
     private Set<ClassX> classes = new HashSet<>();
     private Set<MethodX> methods = new HashSet<>();
-    private int callCount;
+    private int callCount; //raw Call count (excluding comments etc)
     private List<Pattern> patterns = new ArrayList<>();
 
     public Trace(String name) {
         this.name = name;
     }
 
-    public Trace(String name, List<Statement> calls) {
+    public Trace(String name, List<Statement> statements) {
         this.name = name;
-        this.calls = calls;
+        this.statements = statements;
     }
 
     public String getName() {
         return name;
     }
 
-    public List<Statement> getCalls() {
-        return calls;
+    public List<Statement> getStatements() {
+        return statements;
     }
 
     public Set<ClassX> getClasses() {
@@ -43,8 +42,8 @@ public class Trace implements Comparable<Trace> {
         return methods;
     }
 
-    public void setCalls(List<Statement> calls) {
-        this.calls = calls;
+    public void setStatements(List<Statement> statements) {
+        this.statements = statements;
     }
 
     @Override

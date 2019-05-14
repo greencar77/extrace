@@ -6,11 +6,9 @@ import com.rabarbers.call.domain.call.Statement;
 import com.rabarbers.call.domain.call.StubCall;
 import com.rabarbers.htmlgen.html.Element;
 import com.rabarbers.htmlgen.html.InnerHtml;
-import com.rabarbers.htmlgen.html.Element;
 import com.rabarbers.htmlgen.html.Link;
 import com.rabarbers.htmlgen.html.Script;
 import com.rabarbers.htmlgen.html.page.HtmlPage;
-import com.rabarbers.htmlgen.html.svg.Svg;
 import com.rabarbers.call.pattern.Pattern;
 import com.rabarbers.call.pattern.image.PatternImageProducer;
 import org.apache.commons.lang3.StringUtils;
@@ -39,7 +37,7 @@ public class DynamicTracePublisher extends TracePublisher {
         appendPatterns(element, trace, patternImageProducerMap);
 
         StringBuilder sb = new StringBuilder();
-        trace.getCalls().forEach(c -> {
+        trace.getStatements().forEach(c -> {
             sb.append("<span id=\"" + "s" + c.getTreeIndex() + "\">");
             if (c instanceof Call) {
                 Call call = (Call) c;

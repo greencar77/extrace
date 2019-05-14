@@ -1,8 +1,6 @@
 package com.rabarbers.call;
 
-import com.rabarbers.call.domain.Suite;
 import com.rabarbers.call.domain.Trace;
-import com.rabarbers.call.domain.call.Call;
 import com.rabarbers.call.domain.call.Statement;
 import com.rabarbers.call.domain.call.StubCall;
 
@@ -17,7 +15,7 @@ public class GraphManager {
 
         Stack<Statement> stack = new Stack();
         stack.push(root);
-        trace.getCalls().forEach(c -> {
+        trace.getStatements().forEach(c -> {
             if (c.getDepth() + 2 > stack.size()) {
                 if (c.getDepth() + 2 != stack.size() + 1) {
                     throw new RuntimeException("Trace: " + trace.getName() + " " + c.toString());

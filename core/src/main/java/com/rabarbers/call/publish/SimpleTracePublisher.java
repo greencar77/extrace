@@ -17,7 +17,7 @@ public class SimpleTracePublisher extends TracePublisher {
     protected Element appendTraceDetails(Element element, Trace trace, Map<Class<? extends Pattern>, PatternImageProducer<? extends Pattern>> patternImageProducerMap) {
         StringBuilder sb = new StringBuilder();
 
-        trace.getCalls().forEach(c -> {
+        trace.getStatements().forEach(c -> {
             if (c instanceof Call) {
                 Call call = (Call) c;
                 sb.append(c.getDepth() == 0? "" : StringUtils.repeat(EMPTY_TAB, c.getDepth() - 1) + FILLED_TAB)

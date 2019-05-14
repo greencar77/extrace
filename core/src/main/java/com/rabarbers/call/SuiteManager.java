@@ -45,7 +45,7 @@ public class SuiteManager {
 
         Trace result = new Trace(name.substring(0, name.lastIndexOf(".")));
 
-        List<Statement> calls = callRows.stream()
+        List<Statement> statements = callRows.stream()
                 .filter(c -> c != null)
                 .map(call -> {
                     if (call instanceof MethodRow) {
@@ -64,8 +64,8 @@ public class SuiteManager {
                 })
                 .collect(Collectors.toList());
 
-        result.setCalls(calls);
-        result.setCallCount((int) calls.stream().filter(c -> c instanceof Call).count());
+        result.setStatements(statements);
+        result.setCallCount(TraceUtils.calculateCallCount(statements));
 
         graphManager.extractCallTree(result);
 

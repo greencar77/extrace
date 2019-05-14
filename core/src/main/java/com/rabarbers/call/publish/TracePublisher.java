@@ -31,7 +31,7 @@ public abstract class TracePublisher extends HtmlPublisher {
 
     protected void appendStylesheets(HtmlPage root) {}
 
-    protected abstract Element appendTraceDetails(Element element, Trace trace, Map<Class<? extends Pattern>, PatternImageProducer<?>> patternImageProducerMap);
+    protected abstract Element appendTraceDetails(Element element, Trace trace, Map<Class<? extends Pattern>, PatternImageProducer<? extends Pattern>> patternImageProducerMap);
 
     protected String getMethod(Call call) {
         return "<span class=\"method\" title=\"" + call.getMethod().getSignatureX() + "\">" + call.getMethod().getName() + "</span>";

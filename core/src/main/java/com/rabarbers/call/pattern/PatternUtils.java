@@ -12,7 +12,7 @@ public class PatternUtils {
     public static boolean containsMethodTransition(Trace trace, String methodFrom, String methodTo) {
         String normalizedMethodFrom = RowTransformer.normalizeStatement(methodFrom);
         String normalizedMethodTo = RowTransformer.normalizeStatement(methodTo);
-        return trace.getCalls().stream()
+        return trace.getStatements().stream()
                 .filter(c -> c instanceof Call && containsMethodTransition((Call) c, normalizedMethodFrom, normalizedMethodTo))
                 .findAny()
                 .isPresent();
