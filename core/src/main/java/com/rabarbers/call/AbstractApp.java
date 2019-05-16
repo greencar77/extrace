@@ -7,10 +7,14 @@ import com.rabarbers.call.pattern.image.PatternImageProducer;
 import com.rabarbers.call.publish.HtmlDomainPublisher;
 import com.rabarbers.call.publish.TxtDomainPublisher;
 
+import java.io.File;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static com.rabarbers.call.publish.Publisher.DATA_FOLDER;
 
 public abstract class AbstractApp {
 
@@ -35,6 +39,7 @@ public abstract class AbstractApp {
     public void run() {
         createSuite();
         deriveTraces();
+        loadClassHierarchies();
         processPatterns();
 
         publishStandard();
@@ -104,5 +109,20 @@ public abstract class AbstractApp {
     }
 
     protected void deriveTraces() {
+    }
+
+    protected void loadClassHierarchies() {
+        File hierarchiesFolder = new File(DATA_FOLDER + "input/class_hierarchies");
+        if (hierarchiesFolder.exists()) {
+            Arrays.stream(hierarchiesFolder.listFiles())
+                    .filter(f -> !f.isDirectory())
+                    .forEach(hf -> {
+                        appendHierarchy(suite, hf);
+                    });
+        }
+    }
+
+    private void appendHierarchy(Suite suite, File hierarchyFile) {
+        //TODO
     }
 }
