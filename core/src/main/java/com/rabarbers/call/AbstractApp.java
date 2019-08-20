@@ -2,6 +2,9 @@ package com.rabarbers.call;
 
 import com.rabarbers.call.domain.Suite;
 import com.rabarbers.call.domain.Trace;
+import com.rabarbers.call.domain.call.Call;
+import com.rabarbers.call.domain.call.Statement;
+import com.rabarbers.call.domain.call.StatementAttributeName;
 import com.rabarbers.call.pattern.Pattern;
 import com.rabarbers.call.pattern.image.PatternImageProducer;
 import com.rabarbers.call.publish.HtmlDomainPublisher;
@@ -39,6 +42,7 @@ public abstract class AbstractApp {
     public void run() {
         createSuite();
         deriveTraces();
+        addAccessAttributes();
         loadClassHierarchies();
         processPatterns();
 
@@ -124,5 +128,28 @@ public abstract class AbstractApp {
 
     private void appendHierarchy(Suite suite, File hierarchyFile) {
         //TODO
+    }
+
+    protected void addAccessAttributes() {
+        suite.getDomain().getTraces().stream()
+                .forEach(t -> addAccessAttributes(t));
+    }
+
+    protected void addAccessAttributes(Trace trace) {
+        trace.getRootStatement().getChildren().stream()
+                .forEach(child -> traverse(trace.getRootStatement(), child));
+    }
+
+    private void traverse(Statement statementUpper, Statement statementLower) {
+        if (statementUpper instanceof Call && statementLower instanceof Call) {
+            Call upper = (Call) statementUpper;
+            Call lower = (Call) statementLower;
+            if (!upper.getMethod().getClassX().equals(lower.getMethod().getClassX())) {
+                lower.getMethod().addAttributeValue(StatementAttributeName.INTERCLASS.name(), "true");
+            }
+        }
+
+        statementLower.getChildren().stream()
+                .forEach(child -> traverse(statementLower, child));
     }
 }
