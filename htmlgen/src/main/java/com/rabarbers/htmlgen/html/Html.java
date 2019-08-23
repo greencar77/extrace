@@ -2,6 +2,10 @@ package com.rabarbers.htmlgen.html;
 
 public class Html extends Element {
     public Html() {
-        super("html");
+        super((Element) null, "html");
+    }
+
+    public Html(Element parent) {
+        super(parent, "html");
     }
 }

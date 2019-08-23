@@ -2,6 +2,10 @@ package com.rabarbers.htmlgen.html;
 
 public class Div extends Element {
     public Div() {
-        super("div");
+        super((Element) null, "div");
+    }
+
+    public Div(Element parent) {
+        super(parent, "div");
     }
 }

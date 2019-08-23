@@ -3,7 +3,11 @@ package com.rabarbers.htmlgen.html;
 public class InnerHtml extends Element {
 
     public InnerHtml() {
-        super(null);
+        super((Element) null, null);
+    }
+
+    public InnerHtml(Element parent) {
+        super(parent, null);
     }
 
     public InnerHtml(StringBuilder stringBuilder) {

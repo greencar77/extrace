@@ -10,7 +10,11 @@ public class Rect extends Element {
     private int height;
 
     public Rect() {
-        super("rect");
+        super((Element) null, "rect");
+    }
+
+    public Rect(Element parent) {
+        super(parent, "rect");
     }
 
     public Rect(int width, int height) {

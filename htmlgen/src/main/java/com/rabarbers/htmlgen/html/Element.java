@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public abstract class Element {
+    private Element parent;
     private String name;
     private String id;
     protected StringBuilder childContent = new StringBuilder();
@@ -14,8 +15,13 @@ public abstract class Element {
     private Map<String, String> attributes = new HashMap<>();
     private String style;
 
-    public Element(String name) {
+    public Element(Element parent, String name) {
         this.name = name;
+
+        if (parent != null) {
+            this.parent = parent;
+            parent.appendChild(this);
+        }
     }
 
     public Element(String name, String id) {

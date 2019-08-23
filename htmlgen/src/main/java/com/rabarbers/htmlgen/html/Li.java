@@ -2,6 +2,10 @@ package com.rabarbers.htmlgen.html;
 
 public class Li extends Element {
     public Li() {
-        super("li");
+        super((Element) null, "li");
+    }
+
+    public Li(Element parent) {
+        super(parent, "li");
     }
 }

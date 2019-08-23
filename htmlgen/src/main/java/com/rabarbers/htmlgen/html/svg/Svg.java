@@ -8,7 +8,11 @@ public class Svg extends Element {
     private int height;
 
     public Svg() {
-        super("svg");
+        super((Element) null, "svg");
+    }
+
+    public Svg(Element parent) {
+        super(parent, "svg");
     }
 
     public Svg(int width, int height) {

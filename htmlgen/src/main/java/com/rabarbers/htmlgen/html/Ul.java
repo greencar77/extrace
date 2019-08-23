@@ -2,10 +2,14 @@ package com.rabarbers.htmlgen.html;
 
 public class Ul extends Element {
     public Ul() {
-        super("ul");
+        super((Element) null, "ul");
+    }
+
+    public Ul(Element parent) {
+        super(parent, "ul");
     }
 
     public Li createLi() {
-        return new Li();
+        return new Li(this);
     }
 }

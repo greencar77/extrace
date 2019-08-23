@@ -4,7 +4,11 @@ import java.util.List;
 
 public class Table extends Element {
     public Table() {
-        super("table");
+        super((Element) null, "table");
+    }
+
+    public Table(Element parent) {
+        super(parent, "table");
     }
 
     public void addHeader(List<String> header) {
