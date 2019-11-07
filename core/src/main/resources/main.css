@@ -41,3 +41,12 @@ table td {
     -moz-border-radius: 0px 0px 0px 0px;
     vertical-align: top;
 }
+
+.localMethodLink {
+    color: black;
+    text-decoration: none;
+}
+
+span:target {
+    border: 2px solid black;
+}

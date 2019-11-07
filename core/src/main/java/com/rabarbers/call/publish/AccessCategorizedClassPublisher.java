@@ -20,7 +20,7 @@ public class AccessCategorizedClassPublisher extends ClassPublisher {
         classX.getMethods().values().stream()
                 .filter(m -> m.existsAttribute(StatementAttributeName.INTERCLASS.name()))
                 .sorted()
-                .forEach(m -> sb.append("<li>").append(m.getMethodLocalId()).append("</li>"));
+                .forEach(m -> sb.append("<li>").append(localMethodLink(m)).append("</li>"));
         sb.append("</ul>");
 
         sb.append("<li>").append("inner").append("</li>");
@@ -28,7 +28,7 @@ public class AccessCategorizedClassPublisher extends ClassPublisher {
         classX.getMethods().values().stream()
                 .filter(m -> !m.existsAttribute(StatementAttributeName.INTERCLASS.name()))
                 .sorted()
-                .forEach(m -> sb.append("<li>").append(m.getMethodLocalId()).append("</li>"));
+                .forEach(m -> sb.append("<li>").append(localMethodLink(m)).append("</li>"));
         sb.append("</ul>");
         sb.append("</ul>");
 
