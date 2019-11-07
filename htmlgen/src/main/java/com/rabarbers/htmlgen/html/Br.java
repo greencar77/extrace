@@ -8,4 +8,11 @@ public class Br extends Element {
     public Br(Element parent) {
         super(parent, "br");
     }
+
+    @Override
+    public StringBuilder getContent() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<br/>");
+        return sb;
+    }
 }
