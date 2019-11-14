@@ -1,5 +1,6 @@
 package com.rabarbers.call.domain;
 
+import com.rabarbers.call.domain.scenario.Scenario;
 import com.rabarbers.call.pattern.PatternProducer;
 
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ public class Suite {
     private Set<String> forbiddenClasses = new HashSet<>();
     private Set<String> forbiddenMethods = new HashSet<>();
     private Set<PatternProducer<?>> patternProducers = new HashSet<>();
+    private Set<Scenario> scenarios = new HashSet<>();
 
     public Domain getDomain() {
         return domain;
@@ -48,5 +50,9 @@ public class Suite {
 
     public void register(PatternProducer<?> patternProducer) {
         patternProducers.add(patternProducer);
+    }
+
+    public Set<Scenario> getScenarios() {
+        return scenarios;
     }
 }

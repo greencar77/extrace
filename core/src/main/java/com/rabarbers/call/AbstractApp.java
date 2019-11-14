@@ -45,6 +45,7 @@ public abstract class AbstractApp {
         addAccessAttributes();
         loadClassHierarchies();
         processPatterns();
+        loadScenarios();
 
         publishStandard();
         publishCustom();
@@ -151,5 +152,8 @@ public abstract class AbstractApp {
 
         statementLower.getChildren().stream()
                 .forEach(child -> traverse(statementLower, child));
+    }
+
+    protected void loadScenarios() {
     }
 }
