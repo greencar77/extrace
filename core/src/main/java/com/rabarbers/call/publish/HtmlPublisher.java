@@ -19,6 +19,15 @@ public abstract class HtmlPublisher extends Publisher {
                 + toPath(classX.getPackageX()) + "/" + classX.getName() + ".html" + "\">" + caption + "</a>";
     }
 
+    protected String classLink(ClassX classX, String caption, String title, String backtrack) {
+        return "<a class=\"callclass\""
+                + " title=\"" + title + "\""
+                + " href=\""
+                + (backtrack == null? "": backtrack)
+                + "classes/"
+                + toPath(classX.getPackageX()) + "/" + classX.getName() + ".html" + "\">" + caption + "</a>";
+    }
+
     @Override
     protected String getPublisherFolder() {
         return HTML_FOLDER;

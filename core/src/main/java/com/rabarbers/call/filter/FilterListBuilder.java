@@ -1,13 +1,21 @@
 package com.rabarbers.call.filter;
 
+import com.rabarbers.call.domain.ClassX;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 public class FilterListBuilder {
     private List<Item> items = new ArrayList<>();
 
     public FilterListBuilder append(String title, ClassFilter filter) {
         items.add(new Item(title, filter));
+        return this;
+    }
+
+    public FilterListBuilder append(String title, Predicate<ClassX> predicate) {
+        items.add(new Item(title, new PredicateClassFilter(predicate)));
         return this;
     }
 
