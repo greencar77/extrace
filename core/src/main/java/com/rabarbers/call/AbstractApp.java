@@ -1,5 +1,6 @@
 package com.rabarbers.call;
 
+import com.rabarbers.call.domain.ClassX;
 import com.rabarbers.call.domain.Suite;
 import com.rabarbers.call.domain.Trace;
 import com.rabarbers.call.domain.call.Call;
@@ -13,6 +14,7 @@ import com.rabarbers.call.publish.TxtDomainPublisher;
 import java.io.File;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -53,6 +55,7 @@ public abstract class AbstractApp {
 
     protected void createSuite() {
         suite = new Suite();
+        loadClassInfo();
         loadAliases();
         registerPatternProducers();
         registerPatternImageProducers();
@@ -60,6 +63,17 @@ public abstract class AbstractApp {
 
         suiteManager.appendTraceFromFolder(suite, "traces");
     }
+
+    private void loadClassInfo() {
+        Map<String, ClassX> domainClassMap = suite.getDomain().getClasses();
+
+        getClassNames().forEach(cn -> {
+            suiteManager.registerClass(domainClassMap, cn);
+                }
+        );
+    }
+
+    protected abstract List<String> getClassNames();
 
     protected void loadAliases() {
     }

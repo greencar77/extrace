@@ -85,6 +85,19 @@ public class SuiteManager {
         return resultClass;
     }
 
+    public ClassX registerClass(Map<String, ClassX> domainClasses, String classFullName) {
+        ClassX resultClass;
+        if (!domainClasses.containsKey(classFullName)) {
+            resultClass = new ClassX(classFullName.substring(0, classFullName.lastIndexOf(".")),
+                    classFullName.substring(classFullName.lastIndexOf(".") + 1));
+            domainClasses.put(resultClass.getFullName(), resultClass);
+        } else {
+            resultClass = domainClasses.get(classFullName);
+        }
+
+        return resultClass;
+    }
+
     private MethodX registerMethod(Map<String, MethodX> domainMethods, Trace trace, ClassX classX, MethodRow call) {
         MethodX resultMethod;
         if (!domainMethods.containsKey(call.getMethodGlobalId())) {

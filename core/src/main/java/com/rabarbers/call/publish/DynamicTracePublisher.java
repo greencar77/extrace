@@ -43,7 +43,7 @@ public class DynamicTracePublisher extends TracePublisher {
                 Call call = (Call) c;
                 sb.append(c.getDepth() == 0? "" : StringUtils.repeat(EMPTY_TAB, c.getDepth() - 1) + FILLED_TAB)
                         .append(getMethod(call))
-                        .append(" (" + classLink(call.getMethod().getClassX(), call.getMethod().getClassX().getName(), "../") + ")")
+                        .append(" (" + classLink(call.getMethod().getClassX(), call.getMethod().getClassX().getName(), call.getMethod().getClassX().getFullName(), "../") + ")")
                         .append(call.getMethod().getTraces().size() > 1? " [" + call.getMethod().getTraces().size() + "]": "");
             } else if (c instanceof StubCall) {
                 StubCall stubCall = (StubCall) c;
